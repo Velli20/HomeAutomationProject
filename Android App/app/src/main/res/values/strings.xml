@@ -1,0 +1,67 @@
+<!--
+  ~ MIT License
+  ~
+  ~ Copyright (c) [2017] velli20
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<resources>
+    <string name="app_name">Kotiautomaatio</string>
+    <string name="menu_bluetooth_connect">Yhdistä</string>
+    <string name="menu_settings">Asetukset</string>
+    <string name="menu_log_out">Kirjaudu ulos</string>
+
+    <string name="action_search_devices">Etsi laitteita</string>
+    <string name="action_searching_devices">Etsitään laitteita</string>
+    <string name="action_connecting_to_device">Yhdistetään laitteeseen</string>
+    <string name="action_connecting_to_device_failed">Yhdistäminen laitteeseen epäonnistui</string>
+    <string name="action_connected_to_device">Yhdistetty laitteeseen</string>
+    <string name="action_retry">Yritä uudelleen</string>
+    <string name="action_cancel">Peruuta</string>
+    <string name="action_login">Kirjaudu sisään</string>
+
+    <string name="title_new_devices">Löydetyt laitteet</string>
+    <string name="title_bonded_devices">Pariksi liitetyt laitteet</string>
+    <string name="title_no_devices">Ei laitteita</string>
+    <string name="title_device_no_name">(Nimetön)</string>
+    <string name="title_room_temperature">Huoneen lämpötila</string>
+    <string name="title_room_lights">Valot</string>
+    <string name="title_room_lights_brightness">Kirkkaus</string>
+    <string name="title_room_air_humidity">Ilmankosteus</string>
+    <string name="title_room_air_conditioner">Ilmastointi</string>
+    <string name="title_room_air_temperature">Lämpötila</string>
+    <string name="title_automatic">Auto</string>
+    <string name="title_welcome">Tervetuloa</string>
+    <string name="title_logging_in">Kirjaudutaan sisään</string>
+
+    <string name="navigation_drawer_open">Avaa sivupalkki</string>
+    <string name="navigation_drawer_close">Sulje sivupalkki</string>
+
+    <string name="error_not_connected">Virhe: Ei yhdistettynä</string>
+    <string name="error_wrong_password_or_username">Väärä salasana tai käyttäjätunnus</string>
+    <string name="error_username_is_required">Käyttäjätunnus on vaadittu</string>
+    <string name="error_password_is_required">Salasana on vaadittu</string>
+
+    <string name="hint_username">Käyttäjätunnus</string>
+    <string name="hint_password">Salasana</string>
+
+
+
+</resources>

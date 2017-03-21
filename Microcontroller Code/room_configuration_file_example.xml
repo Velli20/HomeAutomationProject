@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Data>
+    <Room name="Olohuone" id="1">
+
+        <RoomWidget>
+            <id type="text">11</id>
+            <type type="text">0</type>
+            <name type="text">Valot</name>
+            <intValue type="text">3</intValue>
+            <boolValue type="text">false</boolValue>
+            <status type="text">2</status>
+        </RoomWidget>
+
+        <RoomWidget>
+            <id type="text">12</id>
+            <type type="text">1</type>
+            <name type="text">Lämpötila</name>
+            <intValue type="text">20</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+    </Room>
+
+    <Room name="Makuuhuone" id="2">
+
+        <RoomWidget>
+            <id type="text">21</id>
+            <type type="text">0</type>
+            <name type="text">Makuuhuoneen valot</name>
+            <intValue type="text">9</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+
+        <RoomWidget>
+            <id type="text">22</id>
+            <type type="text">1</type>
+            <name type="text">Lämpötila</name>
+            <intValue type="text">21</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+
+        <RoomWidget>
+            <id type="text">23</id>
+            <type type="text">2</type>
+            <name type="text">Ilmastointi</name>
+            <intValue type="text">21</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+    </Room>
+	
+	<Room name="Eteinen" id="3">
+
+        <RoomWidget>
+            <id type="text">21</id>
+            <type type="text">0</type>
+            <name type="text">Eteisen valot</name>
+            <intValue type="text">9</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+
+        <RoomWidget>
+            <id type="text">22</id>
+            <type type="text">1</type>
+            <name type="text">Lämpötila</name>
+            <intValue type="text">21</intValue>
+            <boolValue type="text">true</boolValue>
+            <status type="text">1</status>
+        </RoomWidget>
+
+    </Room>
+
+</Data>
