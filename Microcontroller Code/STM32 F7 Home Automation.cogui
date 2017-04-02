@@ -13,40 +13,37 @@
 <folder appearance="1" expanded="2">
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
-<part id="1"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
-<editor id="org.eclipse.cdt.ui.editor.CEditor" name="SerialCommandParser.c" partName="SerialCommandParser.c" path="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Inc/SerialCommandParser.c" title="SerialCommandParser.c" tooltip="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Inc/SerialCommandParser.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32 F7 Home Automation/Src/SerialCommandParser.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="38" selectionTopPixel="0"/>
-</editor>
-<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="SerialCommandWriterReader.c" partName="SerialCommandWriterReader.c" path="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Src/SerialCommandWriterReader.c" title="SerialCommandWriterReader.c" tooltip="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Src/SerialCommandWriterReader.c" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32 F7 Home Automation/Src/SerialCommandWriterReader.c"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="5212" selectionTopPixel="2675"/>
+<editor activePart="true" focus="true" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" partName="main.c" path="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Src/main.c" title="main.c" tooltip="C:/Users/Viktor/Documents/HomeAutomationProject/Microcontroller Code/SourceFiles/Src/main.c" workbook="DefaultEditorWorkbook">
+<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/STM32 F7 Home Automation/Src/main.c"/>
+<editorState selectionHorizontalPixel="0" selectionLength="20" selectionOffset="3567" selectionTopPixel="2047"/>
 </editor>
 </editors>
 <views>
 <view id="org.coocox.builder.ui.views.ProjectView" partName="Project">
-<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="16">
+<viewState CommonNavigator.LINKING_ENABLED="0" horizontalPosition="0" org.eclipse.ui.navigator.resources.workingSets.showTopLevelWorkingSets="0" verticalPosition="1">
 <expanded>
 <element path="/STM32 F7 Home Automation"/>
 <element path="/STM32 F7 Home Automation/BSP"/>
 <element path="/STM32 F7 Home Automation/BSP/STM32746G-Discovery"/>
 <element path="/STM32 F7 Home Automation/Drivers"/>
-<element path="/STM32 F7 Home Automation/Icons"/>
 <element path="/STM32 F7 Home Automation/Src"/>
 <element path="/STM32 F7 Home Automation/Utilities"/>
 <element path="/STM32 F7 Home Automation/Utilities/Fonts"/>
 </expanded>
 <selection>
-<element path="/STM32 F7 Home Automation/Src/SerialCommandWriterReader.c"/>
+<element path="/STM32 F7 Home Automation/Src/main.c"/>
 </selection>
 </viewState>
 </view>
 <view id="org.eclipse.ui.views.ProblemView" partName="Problems">
 <viewState PRIMARY_SORT_FIELD="org.eclipse.ui.ide.severityAndDescriptionField" categoryGroup="org.eclipse.ui.ide.severity" markerContentGenerator="org.eclipse.ui.ide.problemsGenerator" partName="Problems">
+<expanded>
+<category IMemento.internal.id="Warnings (1 item)"/>
+</expanded>
 <columnWidths org.eclipse.ui.ide.locationField="90" org.eclipse.ui.ide.markerType="90" org.eclipse.ui.ide.pathField="120" org.eclipse.ui.ide.resourceField="90" org.eclipse.ui.ide.severityAndDescriptionField="300"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.severityAndDescriptionField"/>
 <visible IMemento.internal.id="org.eclipse.ui.ide.resourceField"/>
@@ -84,8 +81,8 @@
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showMemoryBrowserAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showVariablesAction"/>
 <hide_menu_item_id id="org.coocox.builder.ui.openProjectExplorerAction"/>
-<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.eclipse.debug.ui.commands.TerminateAndRelaunch"/>
+<hide_menu_item_id id="org.coocox.codebugger.trace.actions.ShowTraceControlAction"/>
 <hide_menu_item_id id="org.coocox.codebugger.configuration.showRegistersAction"/>
 <hide_toolbar_item_id id="org.eclipse.cdt.debug.internal.ui.actions.ToggleInstructionStepModeAction"/>
 <hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
@@ -112,7 +109,7 @@
 <page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
 </folder>
 </info>
-<info folder="true" part="org.eclipse.ui.internal.ViewStack@18b6cf1" ratio="0.42612138" ratioLeft="323" ratioRight="435" relationship="4" relative="org.eclipse.ui.internal.ViewStack@9d6b03">
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@18b6cf1" ratio="0.70580477" ratioLeft="535" ratioRight="223" relationship="4" relative="org.eclipse.ui.internal.ViewStack@9d6b03">
 <folder activePageID="org.eclipse.ui.console.ConsoleView" appearance="2" expanded="2">
 <page content="org.eclipse.ui.views.ProblemView" label="Problems"/>
 <page content="org.eclipse.ui.console.ConsoleView" label="Console"/>
@@ -140,168 +137,165 @@
 <workingSets/>
 <navigationHistory>
 <editors>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/RoomConfiguration.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_room_configuration.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/RoomWidgetWriter.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/SerialCommandWriterReader.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/main.c"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_menu.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_temperature.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_lights.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/SerialCommandWriterReader.c"/>
 <editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\SerialCommandWriterReader.h" project="STM32 F7 Home Automation"/>
-<editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\SerialCommandParser.h" project="STM32 F7 Home Automation"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_commands.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_menu.c"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/SerialCommandParser.c"/>
-<editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomWidgetWriter.h" project="STM32 F7 Home Automation"/>
-<editor factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomWidgetConstants.h" project="STM32 F7 Home Automation"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/Window_room_configuration.c"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" path="/STM32 F7 Home Automation/Src/RoomConfiguration.c"/>
 </editors>
-<item historyLabel="Window_room_configuration.c" index="1">
-<position info="not_deleted" x="2348" y="0"/>
-</item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="Window_temperature.c" index="1">
 <position/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="Window_temperature.c" index="1">
 <position/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="Window_lights.c" index="2">
 <position/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="Window_temperature.c" index="1">
+<position info="not_deleted" x="4122" y="0"/>
+</item>
+<item historyLabel="Window_lights.c" index="2">
 <position/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="SerialCommandParser.c" index="6">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="Window_lights.c" index="2">
 <position/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="SerialCommandWriterReader.c" index="3">
 <position/>
 </item>
-<item historyLabel="Window_room_configuration.c" index="1">
-<position info="not_deleted" x="931" y="0"/>
-</item>
-<item historyLabel="RoomConfiguration.c" index="0">
+<item historyLabel="Window_lights.c" index="2">
 <position/>
 </item>
-<item historyLabel="Window_room_configuration.c" index="1">
-<position info="not_deleted" x="931" y="0"/>
+<item historyLabel="Window_temperature.c" index="1">
+<position info="not_deleted" x="4122" y="0"/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
+<item historyLabel="Window_lights.c" index="2">
 <position/>
-</item>
-<item historyLabel="Window_room_configuration.c" index="1">
-<position info="not_deleted" x="3048" y="0"/>
-</item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
-<position/>
-</item>
-<item historyLabel="RoomConfiguration.c" index="0">
-<position/>
-</item>
-<item historyLabel="main.c" index="4">
-<position info="not_deleted" x="564" y="0"/>
 </item>
 <item historyLabel="Window_menu.c" index="5">
+<position info="not_deleted" x="5733" y="7"/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="Window_room_configuration.c" index="7">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="RoomConfiguration.c" index="8">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="main.c" index="0">
+<position/>
+</item>
+<item historyLabel="main.c" index="0">
+<position/>
+</item>
+<item historyLabel="SerialCommandWriterReader.c" index="3">
+<position/>
+</item>
+<item historyLabel="Window_room_configuration.c" index="7">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="main.c" index="4">
-<position info="not_deleted" x="564" y="0"/>
+<item historyLabel="RoomConfiguration.c" index="8">
+<position info="not_deleted" x="4998" y="0"/>
+</item>
+<item historyLabel="Window_lights.c" index="2">
+<position info="not_deleted" x="11275" y="0"/>
+</item>
+<item historyLabel="RoomConfiguration.c" index="8">
+<position info="not_deleted" x="4998" y="0"/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="5240" y="0"/>
+<position info="not_deleted" x="5098" y="0"/>
 </item>
-<item historyLabel="main.c" index="4">
-<position info="not_deleted" x="564" y="0"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="5240" y="0"/>
-</item>
-<item historyLabel="RoomConfiguration.c" index="0">
-<position info="not_deleted" x="7879" y="49"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="5240" y="0"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="49" y="0"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.h" index="6">
+<item historyLabel="SerialCommandWriterReader.h" index="4">
 <position/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="49" y="0"/>
+<position info="not_deleted" x="5100" y="0"/>
+</item>
+<item historyLabel="SerialCommandWriterReader.h" index="4">
+<position info="not_deleted" x="2237" y="19"/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="5595" y="0"/>
-</item>
-<item historyLabel="RoomConfiguration.c" index="0">
-<position info="not_deleted" x="7879" y="49"/>
+<position info="not_deleted" x="5100" y="0"/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="34" y="0"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.h" index="6">
-<position/>
+<position info="not_deleted" x="5321" y="0"/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="78" y="0"/>
+<position info="not_deleted" x="3512" y="40"/>
 </item>
-<item historyLabel="SerialCommandParser.h" index="7">
-<position/>
-</item>
-<item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="45" y="0"/>
-</item>
-<item historyLabel="SerialCommandWriterReader.h" index="6">
-<position info="not_deleted" x="1908" y="0"/>
+<item historyLabel="main.c" index="0">
+<position info="not_deleted" x="3471" y="0"/>
 </item>
 <item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="45" y="0"/>
+<position info="not_deleted" x="2744" y="39"/>
 </item>
-<item historyLabel="Window_commands.c" index="8">
-<position/>
+<item historyLabel="main.c" index="0">
+<position info="not_deleted" x="3471" y="0"/>
 </item>
-<item historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="583" y="0"/>
+<item historyLabel="RoomConfiguration.c" index="8">
+<position info="not_deleted" x="4998" y="0"/>
 </item>
-<item historyLabel="RoomConfiguration.c" index="0">
-<position info="not_deleted" x="7879" y="49"/>
-</item>
-<item historyLabel="main.c" index="4">
-<position info="not_deleted" x="564" y="0"/>
-</item>
-<item historyLabel="Window_commands.c" index="8">
-<position info="not_deleted" x="1412" y="0"/>
-</item>
-<item historyLabel="main.c" index="4">
-<position info="not_deleted" x="564" y="0"/>
-</item>
-<item historyLabel="SerialCommandParser.c" index="9">
-<position info="not_deleted" x="38" y="0"/>
-</item>
-<item historyLabel="SerialCommandParser.h" index="7">
+<item historyLabel="main.c" index="0">
 <position info="not_deleted" x="0" y="0"/>
 </item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
-<position info="not_deleted" x="34" y="0"/>
-</item>
-<item historyLabel="RoomWidgetWriter.h" index="10">
-<position info="not_deleted" x="141" y="0"/>
-</item>
-<item historyLabel="RoomWidgetConstants.h" index="11">
-<position info="not_deleted" x="0" y="0"/>
-</item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
-<position info="not_deleted" x="34" y="0"/>
-</item>
-<item historyLabel="SerialCommandParser.h" index="7">
-<position info="not_deleted" x="199" y="20"/>
-</item>
-<item historyLabel="RoomWidgetWriter.c" index="2">
-<position info="not_deleted" x="34" y="0"/>
-</item>
-<item historyLabel="SerialCommandParser.c" index="9">
-<position info="not_deleted" x="38" y="0"/>
-</item>
-<item active="true" historyLabel="SerialCommandWriterReader.c" index="3">
-<position info="not_deleted" x="5133" y="0"/>
+<item active="true" historyLabel="main.c" index="0">
+<position info="not_deleted" x="3567" y="20"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -310,50 +304,50 @@
 <actionBarAdvisor/>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomConfiguration.c" tooltip="STM32 F7 Home Automation/Src/RoomConfiguration.c">
-<persistable path="/STM32 F7 Home Automation/Src/RoomConfiguration.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.c" tooltip="STM32 F7 Home Automation/Src/main.c">
+<persistable path="/STM32 F7 Home Automation/Src/main.c"/>
 </file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomWidgetParser.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomWidgetParser.h">
-<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomWidgetParser.h" project="STM32 F7 Home Automation"/>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="SerialCommandWriterReader.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\SerialCommandWriterReader.h">
+<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\SerialCommandWriterReader.h" project="STM32 F7 Home Automation"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CircularBuffer.h" tooltip="STM32 F7 Home Automation/CircularBuffer.h">
-<persistable path="/STM32 F7 Home Automation/CircularBuffer.h"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="CircularBuffer.c" tooltip="STM32 F7 Home Automation/Src/CircularBuffer.c">
-<persistable path="/STM32 F7 Home Automation/Src/CircularBuffer.c"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomWidgetParser.c" tooltip="STM32 F7 Home Automation/Src/RoomWidgetParser.c">
-<persistable path="/STM32 F7 Home Automation/Src/RoomWidgetParser.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomConfiguration.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomConfiguration.h">
-<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\RoomConfiguration.h" project="STM32 F7 Home Automation"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_room_configuration.c" tooltip="STM32 F7 Home Automation/Src/Window_room_configuration.c">
-<persistable path="/STM32 F7 Home Automation/Src/Window_room_configuration.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="SerialCommandWriterReader.c" tooltip="STM32 F7 Home Automation/Src/SerialCommandWriterReader.c">
+<persistable path="/STM32 F7 Home Automation/Src/SerialCommandWriterReader.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_lights.c" tooltip="STM32 F7 Home Automation/Src/Window_lights.c">
 <persistable path="/STM32 F7 Home Automation/Src/Window_lights.c"/>
 </file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomWidget.c" tooltip="STM32 F7 Home Automation/Src/RoomWidget.c">
-<persistable path="/STM32 F7 Home Automation/Src/RoomWidget.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="string.h" tooltip="C:\GNUToolsARMEmbedded\6.2\arm-none-eabi\include\string.h">
-<persistable path="C:\GNUToolsARMEmbedded\6.2\arm-none-eabi\include\string.h" project="STM32 F7 Home Automation"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32746g_discovery_lcd.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\BSP\STM32746G-Discovery\Inc\stm32746g_discovery_lcd.h">
-<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\BSP\STM32746G-Discovery\Inc\stm32746g_discovery_lcd.h" project="STM32 F7 Home Automation"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32746g_discovery_lcd.c" tooltip="STM32 F7 Home Automation/BSP/STM32746G-Discovery/Src/stm32746g_discovery_lcd.c">
-<persistable path="/STM32 F7 Home Automation/BSP/STM32746G-Discovery/Src/stm32746g_discovery_lcd.c"/>
-</file>
-<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f7xx_hal_uart.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_uart.h">
-<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_uart.h" project="STM32 F7 Home Automation"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_commands.c" tooltip="STM32 F7 Home Automation/Src/Window_commands.c">
-<persistable path="/STM32 F7 Home Automation/Src/Window_commands.c"/>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomConfiguration.c" tooltip="STM32 F7 Home Automation/Src/RoomConfiguration.c">
+<persistable path="/STM32 F7 Home Automation/Src/RoomConfiguration.c"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_room_configuration.c" tooltip="STM32 F7 Home Automation/Src/Window_room_configuration.c">
 <persistable path="/STM32 F7 Home Automation/Src/Window_room_configuration.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="SerialCommandParser.c" tooltip="STM32 F7 Home Automation/Src/SerialCommandParser.c">
+<persistable path="/STM32 F7 Home Automation/Src/SerialCommandParser.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_temperature.c" tooltip="STM32 F7 Home Automation/Src/Window_temperature.c">
+<persistable path="/STM32 F7 Home Automation/Src/Window_temperature.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="BSP.c" tooltip="STM32 F7 Home Automation/Src/BSP.c">
+<persistable path="/STM32 F7 Home Automation/Src/BSP.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="Window_menu.c" tooltip="STM32 F7 Home Automation/Src/Window_menu.c">
+<persistable path="/STM32 F7 Home Automation/Src/Window_menu.c"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="RoomWidgetWriter.c" tooltip="STM32 F7 Home Automation/Src/RoomWidgetWriter.c">
+<persistable path="/STM32 F7 Home Automation/Src/RoomWidgetWriter.c"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="stm32f7xx_hal.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal.h">
+<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal.h" project="STM32 F7 Home Automation"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="main.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\main.h">
+<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\main.h" project="STM32 F7 Home Automation"/>
+</file>
+<file factoryID="org.eclipse.cdt.ui.ExternalEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="DTH11.h" tooltip="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\DTH11.h">
+<persistable path="C:\Users\Viktor\Documents\HomeAutomationProject\Microcontroller Code\SourceFiles\Inc\DTH11.h" project="STM32 F7 Home Automation"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.cdt.ui.editor.CEditor" name="DTH11.c" tooltip="STM32 F7 Home Automation/Src/DTH11.c">
+<persistable path="/STM32 F7 Home Automation/Src/DTH11.c"/>
 </file>
 </mruList>
 </workbench>
