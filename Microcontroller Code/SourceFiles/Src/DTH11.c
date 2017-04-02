@@ -1,4 +1,3 @@
-#include "main.h"
 #include "DTH11.h"
 
 

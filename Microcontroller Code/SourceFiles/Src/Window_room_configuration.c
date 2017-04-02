@@ -13,7 +13,6 @@
 #define FONT_HEIGHT 14
 
 /* Variables */
-extern char * roomConfigurationString;
 
 /* Funtion prototypes */
 WM_HWIN WindowRoomConfiguration_CreateWindow(void);
@@ -24,7 +23,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 		{ WINDOW_CreateIndirect, "Window", ID_WINDOW_ROOM_CONFIGURATION, 0, 0, 480, 272, 0, 0x0, 0 },
 		{ IMAGE_CreateIndirect, "Image", ID_IMAGE_VIEW_RETURN,10, 10, 48, 48, 0, 0, 0 },
 		{ TEXT_CreateIndirect, "Huone konfiguratio", ID_TEXT_RETURN, 65, 24, 140, 20, 0, 0x0, 0 },
-		{ TEXT_CreateIndirect, "Text", ID_TEXT_CONFIGURATION, 0, 58, 440, 214, 0, 0x0, 0 },
+		{ TEXT_CreateIndirect, "Text", ID_TEXT_CONFIGURATION, 0, 58, 480, 214, 0, 0x0, 0 },
 		{ SCROLLBAR_CreateIndirect, "Scrollbar", ID_TEXT_CONFIGURATION_SCROLLBAR, 440, 58, 40, 214, 8, 0x0, 0 }, };
 
 static WM_HWIN hThisWindow;
@@ -62,7 +61,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	int Id;
 	int     ScrollValue;
 	int     yPos;
-	int i;
 
 	switch (pMsg->MsgId) {
 	case WM_INIT_DIALOG:
@@ -79,7 +77,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_CONFIGURATION);
 		TEXT_SetFont(hItem, GUI_FONT_13B_1);
 
-		/* roomConfigurationString != NULL */
+		char * roomConfigurationString = RoomConfiguration_GetRoomConfiguartionInXmlFormat();
 		if(roomConfigurationString) {
 			TEXT_SetText(hItem, roomConfigurationString);
 
@@ -97,7 +95,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 				SCROLLBAR_SetThumbSizeMin(30);
 				SCROLLBAR_SetNumItems(WM_GetDialogItem(pMsg->hWin, ID_TEXT_CONFIGURATION_SCROLLBAR), scrollBarHeight);
-
+				free(roomConfigurationString);
 			} else {
 				/* Hide scroll bar if the texts calculated height
 				 * is less than the text widget default height

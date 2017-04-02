@@ -35,7 +35,6 @@
   ******************************************************************************
   */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __FONTS_H
 #define __FONTS_H
 
@@ -43,28 +42,10 @@
  extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes */
 #include <stdint.h>
+#include "GUI.h"
 
-/** @addtogroup Utilities
-  * @{
-  */
-  
-/** @addtogroup STM32_EVAL
-  * @{
-  */ 
-
-/** @addtogroup Common
-  * @{
-  */
-
-/** @addtogroup FONTS
-  * @{
-  */ 
-
-/** @defgroup FONTS_Exported_Types
-  * @{
-  */ 
 typedef struct _tFont
 {    
   const uint8_t *table;
@@ -78,32 +59,17 @@ extern sFONT Font20;
 extern sFONT Font16;
 extern sFONT Font12;
 extern sFONT Font8;
-/**
-  * @}
-  */ 
+
+extern GUI_CONST_STORAGE GUI_FONT GUI_Font23S_AA4;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Font23SL_AA4;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Font32S_AA4;
+extern GUI_CONST_STORAGE GUI_FONT GUI_Font32SL_AA4;
+
 
 /** @defgroup FONTS_Exported_Constants
   * @{
   */ 
 #define LINE(x) ((x) * (((sFONT *)BSP_LCD_GetFont())->Height))
-
-/**
-  * @}
-  */ 
-
-/** @defgroup FONTS_Exported_Macros
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-/** @defgroup FONTS_Exported_Functions
-  * @{
-  */ 
-/**
-  * @}
-  */
 
 #ifdef __cplusplus
 }
@@ -111,24 +77,6 @@ extern sFONT Font8;
   
 #endif /* __FONTS_H */
  
-/**
-  * @}
-  */
 
-/**
-  * @}
-  */ 
 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */      
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/* End of file */

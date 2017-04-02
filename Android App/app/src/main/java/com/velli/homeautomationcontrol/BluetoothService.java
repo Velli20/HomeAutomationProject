@@ -39,6 +39,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 
 import com.velli.homeautomationcontrol.collections.Room;
@@ -216,50 +217,61 @@ public class BluetoothService {
 
         public void run() {
             // Keep listening until an error occurs
+            byte[] buffer = new byte[4096];
+
+            int bytes = 0;
             while(true) {
                 try {
-                    if(mInStream != null) {
-                        Log.i("BluetoothService", "BluetoothService read " + mInStream.available());
-                        try {
-                            Log.i("BluetoothService", "BluetoothService" + mInStream.read());
-                            LinkedHashMap<Integer, Room> l = new RoomWidgetParser().parse(mInStream);
-                            sendObjectToUiThread(l);
-                        } catch (XmlPullParserException ignored) {}
-
+                    if(bytes < 4096) {
+                        buffer[bytes] = (byte) mInStream.read();
+                        bytes++;
                     }
                 } catch (IOException e) {
-                    Log.e("BluetoothService", "BluetoothService read " + e);
+                    cancel();
                     break;
                 }
+
+                if (bytes == 4096 || (buffer[bytes -1] == '\n')||(buffer[bytes -1]=='\r')) {
+                    try {
+
+                        sendObjectToUiThread(new String(buffer, "UTF-8"));
+                    }   catch (IOException ignored) {}
+
+                    buffer = new byte[4096];
+                    bytes=0;
+                }
+
+
             }
+
         }
 
         public void write(byte[] buffer) {
-            try {
-                mOutStream.write(buffer);
-            } catch (IOException ignored) {}
+            if(mState == Constants.STATE_CONNECTED && buffer != null) {
+                try {
+                    mOutStream.write(buffer);
+                } catch (IOException ignored) {
+                }
+            }
         }
 
         public void cancel() {
-            try{
-                mInStream.available();
-                if(mInStream != null){
-                    mInStream.close();
-                }
+            try {
+                mInStream.close();
+            } catch (IOException ignored) {
             }
-            catch(IOException ignored){
-            }
-            try{
-                if(mOutStream != null){
+
+            if (mOutStream != null) {
+                try {
                     mOutStream.close();
-                }
+                } catch (IOException ignored) {}
             }
-            catch(IOException ignored){}
             try {
                 mSocket.close();
                 setState(Constants.STATE_NONE);
 
-            } catch (IOException ignored) {}
+            } catch (IOException ignored) {
+            }
 
         }
     }

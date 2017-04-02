@@ -37,6 +37,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 
 import com.velli.homeautomationcontrol.collections.Room;
@@ -45,10 +46,22 @@ public class RoomWidgetParser {
     private static final String Tag = "RoomWidgetParser ";
     private static final String nameSpace = null;
 
+    public LinkedHashMap<Integer, Room> parse(String xmlString) throws XmlPullParserException, IOException {
+        Log.i(Tag, Tag + String.format("parse(%s)", xmlString));
+
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(new StringReader(xmlString));
+            parser.nextTag();
+
+            return readData(parser);
+    }
+
     public LinkedHashMap<Integer, Room> parse(InputStream in) throws XmlPullParserException, IOException {
         Log.i(Tag, Tag + "parse()");
         try {
             XmlPullParser parser = Xml.newPullParser();
+
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
@@ -59,7 +72,7 @@ public class RoomWidgetParser {
     }
 
     private LinkedHashMap<Integer, Room> readData(XmlPullParser parser) throws XmlPullParserException, IOException {
-        LinkedHashMap<Integer, Room> entries = new LinkedHashMap();
+        LinkedHashMap<Integer, Room> entries = new LinkedHashMap<>();
         parser.require(XmlPullParser.START_TAG, nameSpace, "Data");
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -84,7 +97,7 @@ public class RoomWidgetParser {
 
     private LinkedHashMap<Integer, RoomWidget> readRoom(XmlPullParser parser) throws XmlPullParserException, IOException {
         Log.i(Tag, Tag + "readRoom()");
-        LinkedHashMap<Integer, RoomWidget> entries = new LinkedHashMap();
+        LinkedHashMap<Integer, RoomWidget> entries = new LinkedHashMap<>();
 
         parser.require(XmlPullParser.START_TAG, nameSpace, "Room");
         while (parser.next() != XmlPullParser.END_TAG) {

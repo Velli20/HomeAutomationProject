@@ -15,6 +15,8 @@ WM_HWIN Settings_CreateSettingsWindow(void);
 #define ID_TEXT_SETTINGS_MENU_RETURN  (GUI_ID_USER + 0x010)
 #define ID_SETTINGS_MENU_SWIPE_LIST  (GUI_ID_USER + 0x03)
 
+#define WINDOW_SETTINGS_WINDOW_TITLE 			"Asetukset"
+
 /* Static data */
 static WM_HWIN hThisWindow;
 
@@ -22,10 +24,10 @@ const char months_FIN[12][15] = {"Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu"
 		"Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"};
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-		{ WINDOW_CreateIndirect, "Window", ID_WINDOW_SETTINGS_MENU, 1, 0, 480, 272, 0, 0x0, 0 },
-		{ IMAGE_CreateIndirect, "Image", ID_IMAGE_VIEW_SETTINGS_MENU_RETURN, 10, 10, 48, 48, 0, 0, 0 },
-		{ TEXT_CreateIndirect, "Asetukset", ID_TEXT_SETTINGS_MENU_RETURN, 65, 24, 80, 20, 0, 0x0, 0 },
-		{ SWIPELIST_CreateIndirect, "Swipelist", ID_SETTINGS_MENU_SWIPE_LIST, 0, 58, 480, 214, 0, 0x0, 0 },};
+		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_SETTINGS_MENU, 1, 0, 480, 272, 0, 0x0, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_SETTINGS_MENU_RETURN, 10, 10, 48, 48, 0, 0, 0 },
+		{ TEXT_CreateIndirect, WINDOW_SETTINGS_WINDOW_TITLE, ID_TEXT_SETTINGS_MENU_RETURN, 65, 24, 80, 20, 0, 0x0, 0 },
+		{ SWIPELIST_CreateIndirect, NULL, ID_SETTINGS_MENU_SWIPE_LIST, 0, 58, 480, 214, 0, 0x0, 0 },};
 
 /* Private code */
 
@@ -42,7 +44,6 @@ static void Settings_InitMenuItems(WM_HWIN hItem) {
 }
 
 static void _cbDialog(WM_MESSAGE * pMsg) {
-	const void * pData;
 	WM_HWIN hItem;
 	int NCode;
 	int Id;

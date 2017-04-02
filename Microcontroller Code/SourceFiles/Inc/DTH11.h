@@ -2,7 +2,7 @@
 #define __DTH11_H
 
 /* Includes */
-#include "main.h"
+#include "stm32f7xx_hal.h"
 
 
 #define DTH11_MAX_TICS 10000
@@ -21,5 +21,5 @@
 /* Exported funtion prototypes */
 uint8_t DTH11_ReadTemperature(void);
 
-#endif __DTH11_H
+#endif /* __DTH11_H */
 /* END OF FILE */

@@ -7,7 +7,6 @@
 
 
 /* Funtion prototypes */
-void Commands_CommandReceivedCallback(UART_CALLBACK_EVENT event, char *newCommand);
 void Commands_PrintCommandsList(WM_HWIN * listView);
 WM_HWIN Commands_CreateCommandsWindow(void);
 
@@ -22,7 +21,7 @@ static WM_HWIN hThisWindow;
 extern struct LINKED_LIST UartCommands;
 
 /* ROOMLIST declared in RoomConfiguration.c */
-extern struct ROOMLIST* list;
+extern struct RoomList* roomConfiguration;
 
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
@@ -40,7 +39,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	switch (pMsg->MsgId) {
 	case WM_DELETE:
 		hThisWindow = NULL;
-		UART_register_commandReceivedCallback(NULL);
 		break;
 	case WM_INIT_DIALOG:
 		/* Initialization of 'Listview' */
@@ -54,7 +52,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		Commands_PrintCommandsList(hItem);
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
 		IMAGE_SetBitmap(hItem, &bmBITMAP_return);
-		UART_register_commandReceivedCallback(Commands_CommandReceivedCallback);
 		break;
 	case WM_NOTIFY_PARENT:
 		Id = WM_GetId(pMsg->hWinSrc);
@@ -102,17 +99,6 @@ WM_HWIN Commands_CreateCommandsWindow(void) {
 }
 
 
-void Commands_CommandReceivedCallback(UART_CALLBACK_EVENT event, char *newCommand) {
-
-	WM_HWIN hItem;
-	if (NULL != hThisWindow && event == UART_NEW_COMMAND) {
-		hItem = WM_GetDialogItem(hThisWindow, ID_LISTVIEW_0);
-		LISTVIEW_AddRow(hItem, NULL);
-		int row = LISTVIEW_GetNumRows(hItem) - 1;
-		LISTVIEW_SetItemText(hItem, 2, row < 0 ? 0 : row, newCommand);
-
-	}
-}
 
 void Commands_PrintCommandsList(WM_HWIN * listView) {
 
@@ -128,8 +114,13 @@ void Commands_PrintCommandsList(WM_HWIN * listView) {
 			LISTVIEW_AddRow(listView, NULL);
 		}
 	}
+	if(roomConfiguration && roomConfiguration->current && roomConfiguration->current->widgets && roomConfiguration->current->widgets->current) {
 
-
+		if(roomConfiguration->current->widgets->current->name) {
+			LISTVIEW_AddRow(listView, NULL);
+			LISTVIEW_SetItemText(listView, 2, row, roomConfiguration->current->widgets->current->name);
+		}
+	}
 }
 
 

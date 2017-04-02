@@ -47,6 +47,9 @@ public class Constants {
 
     public static final String DEVICE_NAME = "Device name";
 
+    public static final String COMMAND_GET_ROOM_CONFIGURATION = "<GetRoomConfiguration/>\r";
+
+
     //XML tags
     public static final String XML_TAG_DATA = "Data";
     public static final String XML_TAG_ROOM = "Room";
@@ -57,4 +60,9 @@ public class Constants {
     public static final String XML_TAG_INT_VALUE = "intValue";
     public static final String XML_TAG_BOOL_VALUE = "boolValue";
     public static final String XML_TAG_STATUS = "status";
+
+    /* Response tags */
+    public static final String XML_TAG_RESPONSE_COMMAND_UNKNOWN = "UnknownCommand";
+    public static final String XML_TAG_RESPONSE_COMMAND_OK = "OK";
+    public static final String XML_TAG_RESPONSE_COMMAND_INTERNAL_ERROR = "DeviceInternalError";
 }

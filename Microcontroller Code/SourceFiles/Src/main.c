@@ -1,12 +1,15 @@
 /* Includes */
 #include "main.h"
-#include <stdio.h>
-#include <string.h>
 
-/* Variables */
-__IO ITStatus UartReady = RESET;
+
+/* Volatile variables */
 __IO ITStatus UpdateTemperature = RESET;
 __IO ITStatus SdCardInserted = RESET;
+__IO ITStatus UpdateStatusBarTime = RESET;
+
+/* Declared in SerialCommandWriterReader.c */
+extern __IO ITStatus UartRxReady;
+extern __IO ITStatus UartTxReady;
 
 /* Timer3 handler declaration */
 TIM_HandleTypeDef htim3;
@@ -14,36 +17,20 @@ TIM_HandleTypeDef htim3;
 /* Timer7 handler declaration */
 TIM_HandleTypeDef htim7;
 
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
-
-/* DMA handle declaration */
-DMA_HandleTypeDef DmaTxHandle;
-DMA_HandleTypeDef DmaRxHandle;
-
-/* UART RX buffer where we store that one character that just came in */
-uint8_t rxBuffer = '\000';
-uint8_t rxString[RXBUFFERSIZE];
-
 /* Variable to store latest reading of the temperature sensor */
-uint8_t mTemperature = 0;
+uint8_t temperatureReading = 0;
 
 /* LINKED_LIST declaration */
 struct LINKED_LIST UartCommands;
 
-callbackUpdateClock clockCallback;
-uart_cb_t commandReceivedCallback;
-char * roomConfigurationString;
 
 /* Function prototypes */
 static void SystemClock_Config(void);
-static void Uart_Config(void);
-static void UART_RxReadMessage();
 static void CPU_CACHE_Enable(void);
 static void Main_UpdateTemperatureReading(void);
 
 
-void BSP_Background(void);
+
 extern void MainTask(void);
 
 
@@ -54,7 +41,7 @@ extern void MainTask(void);
  */
 int main(void) {
 	/* Enable the CPU Cache */
-	//CPU_CACHE_Enable();
+	CPU_CACHE_Enable();
 	/* STM32F7xx HAL library initialization:
 	 - Configure the Flash ART accelerator on ITCM interface
 	 - Configure the Systick to generate an interrupt each 1 msec
@@ -77,9 +64,8 @@ int main(void) {
 	/* Configure the Real Time Clock */
 	BSP_RTC_Init();
 
-	/* Configure UART */
-	Uart_Config();
-
+	/* Read RoomConfiguration */
+	RoomConfiguration_ReadFromSdCard();
 
 	/* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */
 	uint32_t uwPrescalerValue = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
@@ -116,6 +102,8 @@ int main(void) {
 		HAL_TIM_Base_Start_IT(&htim7);
 	}
 
+	/* Configure UART */
+	SerialCommandWriterReader_UartConfig();
 
 	/* Init the STemWin GUI Library */
 	GUI_Init();
@@ -135,18 +123,27 @@ int main(void) {
 
 	while (1) {
 		WM_Exec();
-
-		if(UartReady == SET) {
-			UartReady = RESET;
-			UART_RxReadMessage();
-		}
 		if(UpdateTemperature == SET) {
 			Main_UpdateTemperatureReading();
 			UpdateTemperature = RESET;
 		}
 		if(SdCardInserted == SET) {
-			RoomConfiguration_ReadFromSdCard();;
+			RoomConfiguration_ReadFromSdCard();
+			Menu_StatusBarUpdateSdCardIcon();
 			SdCardInserted = RESET;
+		}
+		if(UartRxReady == SET) {
+			SerialCommandWriterReader_RxReadMessage();
+			UartRxReady = RESET;
+		}
+		if(UartTxReady == SET) {
+			SerialCommandWriterReader_ClearTxBuffer();
+			UartTxReady = RESET;
+		}
+		if(UpdateStatusBarTime == SET) {
+			/* Update date and time text in menu window */
+			Menu_StatusBarUpdateDateTime();
+			UpdateStatusBarTime = RESET;
 		}
 	}
 }
@@ -162,136 +159,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if(htim->Instance == TIM3) {
 		BSP_Background();
-	} else if(htim->Instance == TIM7 && NULL != clockCallback) {
-		(*clockCallback)();
+	} else if(htim->Instance == TIM7) {
+
 		UpdateTemperature = SET;
+		UpdateStatusBarTime = SET;
 	}
 }
 
 /**
-  * @brief  Tx Transfer completed callback
-  * @param  UartHandle: UART handle.
-  * @note   This example shows a simple way to report end of DMA Tx transfer, and
-  *         you can add your own implementation.
-  * @retval None
-  */
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUart) {
-	/* Set transmission flag: trasfer complete*/
-	UartReady = SET;
-	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
-}
-
-/**
-  * @brief  Rx Transfer completed callback
-  * @param  UartHandle: UART handle
-  * @note   This example shows a simple way to report end of DMA Rx transfer, and
-  *         you can add your own implementation.
-  * @retval None
-  */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *hUart) {
-	/* Set transmission flag: trasfer complete */
-	UART_RxReadMessage();
-}
-
-/**
-  * @brief  UART error callbacks
-  * @param  UartHandle: UART handle
-  * @note   This example shows a simple way to report transfer error, and you can
-  *         add your own implementation.
-  * @retval None
-  */
-void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle) {
-	LinkedList_add("ERROR", true, &UartCommands);
-}
-
-/**
- * @brief  Read RX message in non blocking mode
- * @param  None
+ * @brief  uSD card inserted or removed callback in non blocking mode.
+ * @param  htim: SD_HandleTypeDef handle
  * @retval None
  */
-static void UART_RxReadMessage() {
-	static int rxindex = 0;
-	int i = 0;
-
-	/* Clear the buffer to prevent overrun */
-	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
-
-	if (rxindex < RXBUFFERSIZE) {
-		/*Add that character to the string */
-		rxString[rxindex] = rxBuffer;
-		rxindex++;
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+	if (GPIO_Pin == SD_DETECT_PIN) {
+		SdCardInserted = SET;
 	}
-
-	if (rxBuffer == "\r" || rxBuffer == "\n") {
-		UartReady = SET;
-
-		char * incomingRxData = malloc(sizeof(rxString));
-		strcpy(incomingRxData, rxString);
-		LinkedList_add(incomingRxData, true, &UartCommands);
-		if (NULL != commandReceivedCallback) {
-			(*commandReceivedCallback)(UART_NEW_COMMAND, rxString);
-		}
-		rxString[rxindex] = 0;
-		rxindex = 0;
-		for (i = 0; i < RXBUFFERSIZE; i++) {
-			rxString[i] = 0; // Clear the string buffer
-		}
-	}
-
-	if (rxindex >= (RXBUFFERSIZE - 1)) {
-		rxindex = 0;
-		for (i = 0; i < RXBUFFERSIZE; i++) {
-			rxString[i] = 0; // Clear the string buffer
-		}
-	}
-}
-
-/**
- * @brief  BSP_Background.
- * @param  None
- * @retval None
- */
-void BSP_Background(void) {
-	/* Capture input event and update cursor */
-	if (GUI_IsInitialized()) {
-		BSP_TouchUpdate();
-	}
-}
-
-
-static void Uart_Config(void) {
-	/*##-1- Configure the UART peripheral ######################################*/
-	/* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-	/* UART configured as follows:
-	 - Word Length = 8 Bits
-	 - Stop Bit = One Stop bit
-	 - Parity = None
-	 - BaudRate = 9600 baud
-	 - Hardware flow control disabled (RTS and CTS signals) */
-	UartHandle.Instance = USARTx;
-
-	UartHandle.Init.BaudRate = 9600;
-	UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-	UartHandle.Init.StopBits = UART_STOPBITS_1;
-	UartHandle.Init.Parity = UART_PARITY_NONE;
-	UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	UartHandle.Init.Mode = UART_MODE_TX_RX;
-	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-
-	if (HAL_UART_DeInit(&UartHandle) != HAL_OK) {
-		LinkedList_add("ERROR1", true, &UartCommands);
-	}
-	if (HAL_UART_Init(&UartHandle) != HAL_OK) {
-		LinkedList_add("ERROR2", true, &UartCommands);
-	}
-
-	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
-	/* Put UART peripheral in reception process */
-	if(HAL_UART_Receive_DMA(&UartHandle, &rxBuffer, 1) != HAL_OK) {
-		LinkedList_add("ERROR3", true, &UartCommands);
-	}
-
-	LinkedList_add("UART CONFIG", true, &UartCommands);
 }
 
 /**
@@ -372,7 +255,7 @@ static void CPU_CACHE_Enable(void) {
 	SCB_EnableICache();
 
 	/* Enable D-Cache */
-	SCB_EnableDCache();
+	//SCB_EnableDCache();
 }
 
 /**
@@ -381,9 +264,9 @@ static void CPU_CACHE_Enable(void) {
  * @retval None
  */
 static void Main_UpdateTemperatureReading(void) {
-	static uint8_t updateTicks = -1;
+	static  uint8_t updateTicks = -1;
 
-	mTemperature = DTH11_ReadTemperature();
+	temperatureReading = DTH11_ReadTemperature();
 
 	/* Count updateTicks up because this function is called every 500 ms from
 	 * HAL_TIM_PeriodElapsedCallback() function and desired
@@ -391,21 +274,13 @@ static void Main_UpdateTemperatureReading(void) {
 	 */
 	if(updateTicks == -1 || updateTicks >= 60){
 		updateTicks = 0;
-		TemperatureDataLogger_WriteTemperatureValue(mTemperature);
+		TemperatureDataLogger_WriteTemperatureValue(temperatureReading);
 	} else {
 		updateTicks++;
 	}
 
 }
 
-void Main_register_clockUpdateCallback(callbackUpdateClock callback) {
-	clockCallback = callback;
-}
-
-
-void UART_register_commandReceivedCallback(uart_cb_t cb) {
-	commandReceivedCallback = cb;
-}
 
 
 
@@ -428,4 +303,4 @@ void assert_failed(uint8_t* file, uint32_t line)
 }
 #endif
 
-/* END OF FILE */
+/* End of file */

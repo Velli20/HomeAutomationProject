@@ -25,6 +25,7 @@
 <resources>
     <string name="app_name">Kotiautomaatio</string>
     <string name="menu_bluetooth_connect">Yhdistä</string>
+    <string name="menu_bluetooth_disconnect">Katkaise yhteys</string>
     <string name="menu_settings">Asetukset</string>
     <string name="menu_log_out">Kirjaudu ulos</string>
 

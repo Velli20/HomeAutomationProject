@@ -1,5 +1,5 @@
 
-/* Includes ------------------------------------------------------------------*/
+/* Includes */
 #include "main.h"
 #define RTC_CLOCK_SOURCE_LSI
 
@@ -36,12 +36,12 @@ void HAL_MspInit(void) {
  * @retval None
  */
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
-	/*##-1- Enable peripherals and GPIO Clocks #################################*/
+	/* Enable peripherals and GPIO Clocks */
 	/* TIMx Peripheral clock enable */
 	__HAL_RCC_TIM3_CLK_ENABLE();
 	__HAL_RCC_TIM7_CLK_ENABLE();
 
-	/*##-2- Configure the NVIC for TIMx ########################################*/
+	/* Configure the NVIC for TIMx */
 	/* Set the TIMx priority */
 	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
 	HAL_NVIC_SetPriority(TIM7_IRQn, 0, 1);
@@ -194,7 +194,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 	/* Associate the initialized DMA handle to the the UART handle */
 	__HAL_LINKDMA(huart, hdmarx, DmaRxHandle);
 
-	/*##-4- Configure the NVIC for DMA #########################################*/
+	/* Configure the NVIC for DMA */
 	/* NVIC configuration for DMA transfer complete interrupt (USART6_TX) */
 	HAL_NVIC_SetPriority(USARTx_DMA_TX_IRQn, 0, 4);
 	HAL_NVIC_EnableIRQ(USARTx_DMA_TX_IRQn);
@@ -217,17 +217,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
   * @retval None
   */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart) {
-	/*##-1- Reset peripherals ##################################################*/
+	/* Reset peripherals */
 	USARTx_FORCE_RESET();
 	USARTx_RELEASE_RESET();
 
-	/*##-2- Disable peripherals and GPIO Clocks #################################*/
+	/* Disable peripherals and GPIO Clocks */
 	/* Configure UART Tx as alternate function  */
 	HAL_GPIO_DeInit(USARTx_TX_GPIO_PORT, USARTx_TX_PIN);
 	/* Configure UART Rx as alternate function  */
 	HAL_GPIO_DeInit(USARTx_RX_GPIO_PORT, USARTx_RX_PIN);
 
-	/*##-3- Disable the DMA #####################################################*/
+	/* Disable the DMA */
 	/* De-Initialize the DMA channel associated to reception process */
 	if (huart->hdmarx != 0) {
 		HAL_DMA_DeInit(huart->hdmarx);
@@ -237,9 +237,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart) {
 		HAL_DMA_DeInit(huart->hdmatx);
 	}
 
-	/*##-4- Disable the NVIC for DMA ###########################################*/
+	/* Disable the NVIC for DMA */
 	HAL_NVIC_DisableIRQ(USARTx_DMA_TX_IRQn);
 	HAL_NVIC_DisableIRQ(USARTx_DMA_RX_IRQn);
 }
 
-/***** END OF FILE ****/
+/*End of file */

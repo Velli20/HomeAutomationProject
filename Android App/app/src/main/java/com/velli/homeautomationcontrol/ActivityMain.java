@@ -40,6 +40,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,10 +51,13 @@ import com.velli.homeautomationcontrol.collections.Room;
 import com.velli.homeautomationcontrol.collections.RoomWidget;
 import com.velli.homeautomationcontrol.interfaces.OnBtServiceStateChangedListener;
 
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -62,7 +66,6 @@ import java.util.LinkedHashMap;
 import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetDataReceivedListener;
 
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String Tag = "ActivityMain";
     private static final int REQUEST_CODE_SCAN_FOR_DEVICES = 0;
 
     private BluetoothService mBtService;
@@ -97,8 +100,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         mNavigationView = ((NavigationView) findViewById(R.id.nav_view));
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        mRooms = getDummyRooms();
-        setData(mRooms);
+
 
         mBtService = BluetoothService.getInstance();
         mBtService.setHandler(new BluetoothServiceHandler(this));
@@ -136,12 +138,27 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem itemConnect = menu.findItem(R.id.menu_search_devices);
+        boolean connected = BluetoothService.getInstance().getState() == Constants.STATE_CONNECTED;
+        if(itemConnect != null) {
+            itemConnect.setTitle(getString(connected ? R.string.menu_bluetooth_disconnect :  R.string.menu_bluetooth_connect));
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.menu_search_devices) {
-            Intent i = new Intent(this, ActivitySearchDevices.class);
-            startActivityForResult(i, REQUEST_CODE_SCAN_FOR_DEVICES);
+            boolean connected = BluetoothService.getInstance().getState() == Constants.STATE_CONNECTED;
+            if(connected) {
+                BluetoothService.getInstance().disconnect();
+            } else {
+                Intent i = new Intent(this, ActivitySearchDevices.class);
+                startActivityForResult(i, REQUEST_CODE_SCAN_FOR_DEVICES);
+            }
             return true;
         }
 
@@ -179,13 +196,16 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+
     private RoomControlFragment getNewRoomFragment(int id, LinkedHashMap<Integer, RoomWidget> widgets) {
         RoomControlFragment frag = new RoomControlFragment();
         frag.setRoomWidgets(id, widgets);
         return frag;
     }
 
-
+    /* Loads dummy RoomConfiguration xml file from assets
+     * folder. This is for debugging and demonstration use only.
+     */
     private LinkedHashMap<Integer, Room> getDummyRooms() {
         LinkedHashMap<Integer, Room> widgets = null;
 
@@ -202,32 +222,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         return widgets;
     }
 
-    private void setData(LinkedHashMap<Integer, Room> widgets) {
 
-        if(widgets != null) {
-            mRooms = widgets;
-            notifyWidgetDataReceivedCallbacks(widgets);
-            int order = 0;
-            Menu menu = mNavigationView.getMenu().findItem(R.id.nav_group_rooms).getSubMenu();
-            for(Room room : widgets.values()) {
-
-                if(menu.findItem(room.getRoomId()) == null) {
-                    MenuItem item = menu.add(R.id.nav_group_rooms, room.getRoomId(), order, room.getRoomName());
-                    item.setIcon(R.mipmap.ic_label_grey);
-                    if(mCurrentMenuItem == null) {
-                        onNavigationItemSelected(item);
-                    }
-                }
-
-                order++;
-            }
-        }
-        MenuItem logout = mNavigationView.getMenu().findItem(R.id.nav_log_out);
-        if (logout != null) {
-            logout.setVisible(mEndNodeRequiresLogin);
-        }
-
-    }
 
     public BluetoothService getBluetoothService() {
         return mBtService;
@@ -238,7 +233,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_SCAN_FOR_DEVICES:
+                /* The user has selected Bluetooth device to connect */
                 if(data != null) {
+                    /* Try to connect to device with given MAC address */
                     connectToDevice(data.getStringExtra(ActivitySearchDevices.INTENT_EXTRA_DEVICE_NAME),
                             data.getStringExtra(ActivitySearchDevices.INTENT_EXTRA_DEVICE_ADDRESS));
                 }
@@ -246,12 +243,15 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void connectToDevice(String deviceName, String deviceAdress) {
+    /* Shows dialog on bottom of the screen that we are trying to
+     * establish a connection to the Bluetooth device
+     */
+    private void connectToDevice(String deviceName, String deviceAddress) {
         mBtDeviceName = deviceName;
-        mBtDeviceAddress = deviceAdress;
+        mBtDeviceAddress = deviceAddress;
 
         hideDialog();
-        mBtService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAdress));
+        mBtService.connect(BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress));
         mDialog = new MaterialDialog.Builder(this)
                 .content(getString(R.string.action_connecting_to_device) + " " + deviceName)
                 .cancelable(false)
@@ -259,6 +259,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 .show();
     }
 
+    /* Shows dialog on bottom of the screen that connection attempt
+       to Bluetooth device has failed.
+     */
     private void showConnectionFailed() {
         hideDialog();
 
@@ -276,6 +279,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 .show();
     }
 
+    /* Shows dialog on bottom screen that we are connected to the Bluetooth device */
     private void showConnectedToDevice() {
         hideDialog();
         Snackbar.make(findViewById(android.R.id.content),
@@ -283,6 +287,18 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 Snackbar.LENGTH_LONG).show();
     }
 
+    public void showNotConnectedError() {
+        Snackbar.make(findViewById(android.R.id.content), R.string.error_not_connected, Snackbar.LENGTH_LONG)
+                .setAction(R.string.menu_bluetooth_connect, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(ActivityMain.this, ActivitySearchDevices.class);
+                        startActivityForResult(i, REQUEST_CODE_SCAN_FOR_DEVICES);
+                    }
+                }).show();
+    }
+
+    /* Hide current active dialog */
     private void hideDialog() {
         if(mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
@@ -290,6 +306,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         mDialog = null;
     }
 
+    /* Handler for handling messages coming from BluetoothService.
+       It delivers Bluetooth connection state changes to UI thread
+       and also incoming data from micro controller
+     */
     private static class BluetoothServiceHandler extends Handler {
         private WeakReference<ActivityMain> mActivity;
 
@@ -311,6 +331,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                             break;
                         case Constants.STATE_CONNECTED:
                             mActivity.get().showConnectedToDevice();
+                            mActivity.get().requestRoomConfiguration();
                             break;
                         case Constants.STATE_CONNECTION_FAILED:
                             mActivity.get().showConnectionFailed();
@@ -318,14 +339,103 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                     }
                     break;
                 case Constants.MESSAGE_READ:
-                    LinkedHashMap<Integer, Room> data = (LinkedHashMap) msg.obj;
-                    if(data != null) {
-                        mActivity.get().setData(data);
+                    if(msg.obj  != null && msg.obj instanceof String) {
+
+
+                        mActivity.get().parseCommand((String)msg.obj);
+                        Log.i("ActivityMain", "Command: " + ((String)msg.obj));
+
                     }
                     break;
             }
         }
     }
+
+    private void parseCommand(String command) {
+        if(command == null) {
+            return;
+        }
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(new StringReader(command));
+            parser.nextTag();
+
+
+        } catch(XmlPullParserException | IOException e) {
+            Log.e("ActivityMain", e.getMessage());
+            return;
+        }
+
+        try {
+            LinkedHashMap<Integer, Room> l = new RoomWidgetParser().parse(command);
+            setData(l);
+            return;
+        } catch (XmlPullParserException | IOException e) {
+            Log.e("ActivityMain", e.getMessage());
+        }
+        try {
+            parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_UNKNOWN);
+            Snackbar.make(findViewById(android.R.id.content), "Unknown command", Snackbar.LENGTH_LONG).show();
+            /* Restore previous state */
+            setData(mRooms);
+            return;
+        } catch (XmlPullParserException | IOException e) { }
+
+        try {
+            parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_OK);
+            Snackbar.make(findViewById(android.R.id.content), "Command OK", Snackbar.LENGTH_LONG).show();
+            return;
+        } catch (XmlPullParserException | IOException ignored) {}
+
+        try {
+            parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_INTERNAL_ERROR);
+            Snackbar.make(findViewById(android.R.id.content), "Internal error", Snackbar.LENGTH_LONG).show();
+            /* Restore previous state */
+            setData(mRooms);
+        } catch (XmlPullParserException | IOException ignored) {}
+
+    }
+
+    /* Set RoomConfiguration data. This function inflates navigation drawers
+     * list with a room names and notifies fragments that are listening for data changes
+     */
+    private void setData(LinkedHashMap<Integer, Room> widgets) {
+
+        if(widgets != null) {
+            mRooms = widgets;
+            /* Notify fragments that data is received */
+            notifyWidgetDataReceivedCallbacks(widgets);
+            int order = 0;
+            Menu menu = mNavigationView.getMenu().findItem(R.id.nav_group_rooms).getSubMenu();
+
+            for(Room room : widgets.values()) {
+
+                /* Check if menu already contains item with given id. This
+                 * ensures that we are not adding room to list twice with same id
+                 */
+                if(menu.findItem(room.getRoomId()) == null) {
+                    MenuItem item = menu.add(R.id.nav_group_rooms, room.getRoomId(), order, room.getRoomName());
+                    item.setIcon(R.mipmap.ic_label_grey);
+
+                    if(mCurrentMenuItem == null) {
+                        /* If current selected menu item is null then call callback
+                           function to show a room fragment with this room id
+                         */
+                        onNavigationItemSelected(item);
+                    }
+                }
+
+                order++;
+            }
+        }
+        MenuItem logout = mNavigationView.getMenu().findItem(R.id.nav_log_out);
+        if (logout != null) {
+            logout.setVisible(mEndNodeRequiresLogin);
+        }
+
+    }
+
 
     public void registerOnRoomWidgetDataReceivedListener(int roomId, OnRoomWidgetDataReceivedListener l) {
         if(mWidgetDataReceivedCallbacks != null) {
@@ -351,6 +461,9 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /* Notify callbacks that are registered for a widget state changes. This
+     * function is called when new data is received from a micro controller.
+     */
     public void notifyWidgetDataReceivedCallbacks(LinkedHashMap<Integer, Room> data) {
 
         for(Room room : data.values()) {
@@ -362,7 +475,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /* Notify callbacks that are listening for a bluetooth connection
+     * status changes
+     */
     public void notifyBtStateCallbacks(int newState) {
+        invalidateOptionsMenu();
         if(mBtStateChangedCallbacks == null) {
             return;
         }
@@ -371,25 +488,30 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /* Write changes that was made to a widget to the micro controller */
     public void commitRoomDataChanges(int roomId, RoomWidget widget) {
-        Log.i(Tag, Tag + new RoomWidgetWriter().writeXml(roomId, widget));
 
         if(mBtService != null && mBtService.getState() == Constants.STATE_CONNECTED) {
-            mBtService.write(new RoomWidgetWriter().writeXml(roomId, widget));
+            byte data[] = new RoomWidgetWriter().writeXml(roomId, widget);
+            try {
+                Log.i("ActivityMain", (new String(data, "UTF-8")));
+            } catch (UnsupportedEncodingException ignored) {}
+
+            mBtService.write(data);
         } else {
+            /* Not connected to the micro controller. Show error and restore
+             * widget previous state */
             showNotConnectedError();
             setData(mRooms);
         }
     }
 
-    public void showNotConnectedError() {
-        Snackbar.make(findViewById(android.R.id.content), R.string.error_not_connected, Snackbar.LENGTH_LONG)
-                .setAction(R.string.menu_bluetooth_connect, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(ActivityMain.this, ActivitySearchDevices.class);
-                        startActivityForResult(i, REQUEST_CODE_SCAN_FOR_DEVICES);
-                    }
-                }).show();
+    /* Request RoomConfiguration from micro controller */
+    public void requestRoomConfiguration() {
+        if(mBtService != null && mBtService.getState() == Constants.STATE_CONNECTED) {
+            mBtService.write(Constants.COMMAND_GET_ROOM_CONFIGURATION.getBytes());
+        }
     }
+
+
 }

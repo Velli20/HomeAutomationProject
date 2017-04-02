@@ -13,34 +13,35 @@
 #define ID_TEXT_RETURN  (GUI_ID_USER + 0x10)
 
 #define SPINBOX_HOUR_RANGE_24H_MAX 		23
-#define SPINBOX_HOUR_RANGE_MIN			-1
+#define SPINBOX_HOUR_RANGE_MIN			0
 
-#define SPINBOX_MINUTE_RANGE_MAX 		60
-#define SPINBOX_MINUTE_RANGE_MIN		-1
+#define SPINBOX_MINUTE_RANGE_MAX 		59
+#define SPINBOX_MINUTE_RANGE_MIN		0
 
-/* Funtion prototypes */WM_HWIN SettingsTime_CreateSettingsTimeWindow(void);
+#define WINDOW_TIME_SETTINGS_WINDOW_TITLE 			"Aseta aika"
+#define WINDOW_TIME_SETTINGS_BUTTON_SAVE_TITLE		"Tallenna"
+
+/* Funtion prototypes */
+WM_HWIN SettingsTime_CreateSettingsTimeWindow(void);
 
 /* Static data */
 static WM_HWIN hThisWindow;
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-		{ WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 480, 272, 0, 0x0, 0 },
-		{ SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_HOURS, 80, 110, 130, 80, 0, 0x0, 0 },
-		{ SPINBOX_CreateIndirect, "Spinbox", ID_SPINBOX_MINUTES, 240, 110, 130, 80, 0, 0x0, 0 },
-		{ IMAGE_CreateIndirect, "Save", ID_IMAGE_VIEW_SAVE, 10, 216, 48, 48, 0, 0, 0 },
-		{ TEXT_CreateIndirect, "Tallenna", ID_TEXT_SAVE, 65, 230, 80, 20, 0, 0x0, 0 },
-		{ IMAGE_CreateIndirect, "Return", ID_IMAGE_VIEW_RETURN, 10, 10, 48, 48, 0, 0, 0 },
-		{ TEXT_CreateIndirect, "Aseta aika", ID_TEXT_RETURN, 65, 24, 80, 20, 0, 0x0, 0 }, };
+		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_0, 0, 0, 480, 272, 0, 0x0, 0 },
+		{ SPINBOX_CreateIndirect, NULL, ID_SPINBOX_HOURS, 80, 110, 130, 80, 0, 0x0, 0 },
+		{ SPINBOX_CreateIndirect, NULL, ID_SPINBOX_MINUTES, 240, 110, 130, 80, 0, 0x0, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_SAVE, 10, 216, 48, 48, 0, 0, 0 },
+		{ TEXT_CreateIndirect, WINDOW_TIME_SETTINGS_BUTTON_SAVE_TITLE, ID_TEXT_SAVE, 65, 230, 80, 20, 0, 0x0, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_RETURN, 10, 10, 48, 48, 0, 0, 0 },
+		{ TEXT_CreateIndirect, WINDOW_TIME_SETTINGS_WINDOW_TITLE, ID_TEXT_RETURN, 65, 24, 80, 20, 0, 0x0, 0 }, };
 
 /* Static code */
 
 static void _cbDialog(WM_MESSAGE * pMsg) {
-	const void * pData;
 	WM_HWIN hItem;
-	U32 FileSize;
 	int NCode;
 	int Id;
-	int valueHours = 0;
 	int valueMinutes = 0;
 
 	switch (pMsg->MsgId) {
@@ -88,12 +89,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			case WM_NOTIFICATION_VALUE_CHANGED:
 				hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_HOURS);
 
-				if (valueHours == 0 && SPINBOX_GetValue(hItem) == SPINBOX_HOUR_RANGE_MIN) {
-					valueHours = SPINBOX_HOUR_RANGE_24H_MAX;
-					SPINBOX_SetValue(hItem, SPINBOX_HOUR_RANGE_24H_MAX);
-				} else {
-					valueHours = SPINBOX_GetValue(hItem);
-				}
+
 				break;
 
 			}

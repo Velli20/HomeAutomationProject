@@ -20,6 +20,9 @@
 #define BOOL_VALUE_TRUE "true"
 #define BOOL_VALUE_FALSE "false"
 
+#define WIDGET_TYPE_LIGHT 			0
+#define WIDGET_TYPE_THERMOSTAT 		1
+
 #endif /* WIDGETCONSTANTS_H_ */
 
 /* END OF FILE */

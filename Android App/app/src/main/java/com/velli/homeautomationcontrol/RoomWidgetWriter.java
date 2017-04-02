@@ -94,7 +94,7 @@ public class RoomWidgetWriter {
             serializer.endTag(namespace, Constants.XML_TAG_DATA);
             serializer.endDocument();
         } catch (Exception ignored) {}
-
+        writer.append("\r");
         return writer.toString().getBytes();
     }
 

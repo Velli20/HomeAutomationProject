@@ -18,12 +18,14 @@ typedef struct {
 } BITMAP_ITEM;
 
 /* Private function prototypes */
-static void Menu_setItemSelected(WM_HWIN hItem, int selected);
-static void Menu_UpdateTemperatureReading(void);
+static void Menu_SetMenuItemSelected(WM_HWIN hItem, int selected);
 
 /* Function prototypes */
 WM_HWIN Menu_CreateMenuWindow(void);
-void Menu_clockUpdateCallback(void);
+
+void Menu_StatusBarUpdateDateTime(void);
+void Menu_StatusBarUpdateSdCardIcon(void);
+void Menu_StatusBarUpdateTemperatureReading(void);
 
 /* Static data */
 static const BITMAP_ITEM mBitmaps[] = { { &bmBITMAP_lights, "Valaistus" }, {
@@ -45,12 +47,9 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 
 /* Variables */
 WM_HWIN hThisWindow;
-extern __IO ITStatus SdCardInserted;
 
 /* Variable to store latest reading of the temperature sensor declared in main.c */
-extern uint8_t mTemperature;
-
-
+extern uint8_t temperatureReading;
 
 
 /* Private code */
@@ -93,7 +92,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_TEMPERATURE);
 		TEXT_SetFont(hItem, GUI_FONT_13B_1);
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-		Menu_UpdateTemperatureReading();
+		Menu_StatusBarUpdateTemperatureReading();
 
 
 		/* Initialization of menu */
@@ -109,7 +108,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			ICONVIEW_AddBitmapItem(hItem, mBitmaps[i].pBitmap,mBitmaps[i].pText);
 			ICONVIEW_SetTextColor(hItem, i, 0x000000);
 		}
-		Main_register_clockUpdateCallback(Menu_clockUpdateCallback);
 		break;
 	case WM_NOTIFY_PARENT:
 		Id = WM_GetId(pMsg->hWinSrc);
@@ -120,10 +118,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		case ID_ICONVIEW_MENU:
 			switch (NCode) {
 			case WM_NOTIFICATION_CLICKED:
-				Menu_setItemSelected(hItem, 1);
+				Menu_SetMenuItemSelected(hItem, 1);
 				break;
 			case WM_NOTIFICATION_RELEASED:
-				Menu_setItemSelected(hItem, 0);
+				Menu_SetMenuItemSelected(hItem, 0);
 				selection = ICONVIEW_GetSel(hItem);
 
 				ICONVIEW_SetSel(hItem, -1);
@@ -165,9 +163,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
  * @param  hItem: Handle of ICONVIEW widget
  * @param  selected: 1 if item is clicked or 0 if item is released
  */
-static void Menu_setItemSelected(WM_HWIN hItem, int selected) {
+static void Menu_SetMenuItemSelected(WM_HWIN hItem, int selected) {
+	if(!hItem) {
+		return;
+	}
 	int selection = ICONVIEW_GetSel(hItem);
-	if(selection < 0 || selection > 3 || hItem == NULL) {
+
+	if(selection < 0 || selection > 3) {
 		return;
 	}
 
@@ -180,38 +182,16 @@ static void Menu_setItemSelected(WM_HWIN hItem, int selected) {
 
 }
 
-static void Menu_UpdateTemperatureReading() {
-	char tempText[10];
-	sprintf(tempText, "%d °C", mTemperature);
 
-	WM_HWIN hItem = WM_GetDialogItem(hThisWindow, ID_TEXT_TEMPERATURE);
-	TEXT_SetText(hItem, tempText);
-}
 
 /* Public code */
 
-/**
- * @brief  uSD card inserted or removed callback in non blocking mode.
- *         Set sd card icon visible/invisible depending on whether
- *         a sd card is inserted or not
- * @param  htim: SD_HandleTypeDef handle
- * @retval None
- */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == SD_DETECT_PIN && hThisWindow != NULL) {
-		SdCardInserted = SET;
-		WM_HWIN hItem = WM_GetDialogItem(hThisWindow, ID_STATUS_BAR_ICON_SD_CARD);
-		if(hItem == NULL) {
-			return;
-		}
-		if (BSP_SD_IsDetected() == SD_PRESENT) {
-			WM_ShowWin(hItem);
-		} else {
-			WM_HideWin(hItem);
-		}
-	}
-}
 
+/**
+  * @brief Createand show menu window
+  * @param None
+  * @retval WM_HWIN: Handle pointing to menu window
+  */
 WM_HWIN Menu_CreateMenuWindow(void) {
 
 	hThisWindow = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -220,13 +200,16 @@ WM_HWIN Menu_CreateMenuWindow(void) {
 
 
 /**
-  * @brief RTC clock update callbacks
+  * @brief Update date time text on status bar
   * @param None
   * @retval None
   */
-void Menu_clockUpdateCallback(void) {
+void Menu_StatusBarUpdateDateTime() {
+	if(!hThisWindow) {
+		return;
+	}
 	int up = 0;
-	uint8_t aShowTime[50] = { 0 };
+	uint8_t aShowTime[20];
 
 	RTC_TimeTypeDef stimestructureget;
 	RTC_DateTypeDef sdatestructureget;
@@ -238,10 +221,10 @@ void Menu_clockUpdateCallback(void) {
 	WM_HWIN hTime = WM_GetDialogItem(hThisWindow, ID_TEXT_TIME);
 	WM_HWIN hDate = WM_GetDialogItem(hThisWindow, ID_TEXT_DATE);
 
-	Menu_UpdateTemperatureReading();
+	Menu_StatusBarUpdateTemperatureReading();
 
-	if (NULL != hThisWindow) {
-		up = (stimestructureget.Seconds %2 == 0? 1 : 0);
+	if (hTime && hDate && aShowTime) {
+		up = (stimestructureget.Seconds % 2 == 0? 1 : 0);
 		sprintf(aShowTime, (up ? "%02d:%02d:%02d" : "%02d %02d %02d"),
 				stimestructureget.Hours, stimestructureget.Minutes,
 				stimestructureget.Seconds);
@@ -251,7 +234,41 @@ void Menu_clockUpdateCallback(void) {
 				sdatestructureget.Month, sdatestructureget.Year + 2000);
 		TEXT_SetText(hDate, aShowTime);
 	}
+}
 
+/**
+  * @brief Update µSD card icon on the status bar
+  * @param None
+  * @retval None
+  */
+void Menu_StatusBarUpdateSdCardIcon() {
+	if (hThisWindow) {
+		WM_HWIN hItem = WM_GetDialogItem(hThisWindow, ID_STATUS_BAR_ICON_SD_CARD);
+		if (!hItem) {
+			return;
+		}
+		if (BSP_SD_IsDetected() == SD_PRESENT) {
+			WM_ShowWin(hItem);
+		} else {
+			WM_HideWin(hItem);
+		}
+	}
+}
+
+/**
+  * @brief Update temperature value on status bar
+  * @param None
+  * @retval None
+  */
+void Menu_StatusBarUpdateTemperatureReading() {
+	if(!hThisWindow) {
+		return;
+	}
+	char tempText[10];
+	sprintf(tempText, "%d °C", temperatureReading);
+
+	WM_HWIN hItem = WM_GetDialogItem(hThisWindow, ID_TEXT_TEMPERATURE);
+	TEXT_SetText(hItem, tempText);
 }
 
 /* End of file */

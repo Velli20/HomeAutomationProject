@@ -1,11 +1,18 @@
 #ifndef __ROOMWIDGETPARSER_H
 #define __ROOMWIDGETPARSER_H
 
+/* Includes */
 #include "ezxml.h"
+#include "RoomWidget.h"
+#include "RoomWidgetConstants.h"
 
-struct ROOMLIST* RoomWidgetParser_ParseString(char * xmlString, size_t lenght);
-void RoomWidgetParser_ParseData(ezxml_t  a_node, struct ROOMLIST *list);
-struct ROOM* RoomWidgetParser_ParseRoom(ezxml_t roomNode);
-struct RoomWidget* RoomWidgetParser_ParseWidget(ezxml_t widgetNode);
+#include <stdio.h>
+#include <string.h>
+
+/* Public function prototypes */
+struct RoomList* RoomWidgetParser_ParseString(char * xmlString, size_t lenght);
+struct RoomList* RoomWidgetParser_ParseData(const ezxml_t  a_node);
+struct Room* RoomWidgetParser_ParseRoom(const ezxml_t roomNode);
+struct RoomWidget* RoomWidgetParser_ParseWidget(const ezxml_t widgetNode);
 
 #endif /* __ROOMWIDGETPARSER_H */

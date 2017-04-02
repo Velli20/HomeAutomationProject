@@ -1,12 +1,13 @@
-/* Includes ------------------------------------------------------------------*/
+/* Includes */
 #include "BSP.h"
 
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables */
 /* RTC handler declaration */
 RTC_HandleTypeDef RtcHandle;
 /* LCD layer declaration */
 uint8_t SelLayer;
+
 
 /**
  * @brief  Initializes LEDs, SDRAM, touch screen, CRC and SRAM.
@@ -29,6 +30,17 @@ void BSP_Init(void) {
 
 }
 
+/**
+ * @brief  BSP_Background.
+ * @param  None
+ * @retval None
+ */
+void BSP_Background(void) {
+	/* Capture input event and update cursor */
+	if (GUI_IsInitialized()) {
+		BSP_TouchUpdate();
+	}
+}
 
 /**
  * @brief  Configure the RTC Date
@@ -151,7 +163,7 @@ HAL_StatusTypeDef BSP_RTC_Init(void) {
 		return HAL_ERROR;
 	}
 	BSP_RTC_SetTime(4, 0, 0);
-	BSP_RTC_SetDate(20, 1, 2017);
+	BSP_RTC_SetDate(20, 1, 17);
 	return HAL_OK;
 }
 
@@ -161,7 +173,7 @@ HAL_StatusTypeDef BSP_RTC_Init(void) {
  * @param  None
  * @retval RTC_TimeTypeDef: RTC Time structure
  */
-RTC_TimeTypeDef BSP_RTC_GetTime() {
+RTC_TimeTypeDef BSP_RTC_GetTime(void) {
     RTC_TimeTypeDef stimestructureget;
 
 	HAL_RTC_GetTime(&RtcHandle, &stimestructureget, RTC_FORMAT_BIN);
@@ -173,7 +185,7 @@ RTC_TimeTypeDef BSP_RTC_GetTime() {
  * @param  None
  * @retval RTC_DateTypeDef: RTC Date structure
  */
-RTC_DateTypeDef BSP_RTC_GetDate() {
+RTC_DateTypeDef BSP_RTC_GetDate(void) {
 	RTC_DateTypeDef sdatestructureget;
 
 	HAL_RTC_GetDate(&RtcHandle, &sdatestructureget, RTC_FORMAT_BIN);
@@ -181,3 +193,4 @@ RTC_DateTypeDef BSP_RTC_GetDate() {
 }
 
 
+/* End of file */

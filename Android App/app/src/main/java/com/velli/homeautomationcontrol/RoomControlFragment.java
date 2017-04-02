@@ -27,8 +27,10 @@
 package com.velli.homeautomationcontrol;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -47,17 +49,22 @@ import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetChangedListener;
 import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetDataReceivedListener;
 
 
-public class RoomControlFragment extends Fragment implements OnRoomWidgetChangedListener, OnBtServiceStateChangedListener, OnRoomWidgetDataReceivedListener {
+public class RoomControlFragment extends Fragment implements OnRoomWidgetChangedListener, OnBtServiceStateChangedListener, OnRoomWidgetDataReceivedListener, SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mList;
+    private SwipeRefreshLayout mRefreshLayout;
     private LinkedHashMap<Integer, RoomWidget> mWidgets;
     private RoomWidgetsAdapter mAdapter;
     private int mRoomId = -1;
+    private boolean mRefreshing = false;
+    private Handler mRefreshHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mList = (RecyclerView) inflater.inflate(R.layout.fragment_room_control, container, false);
-        return mList;
+        View v = inflater.inflate(R.layout.fragment_room_control, container, false);
+        mList = (RecyclerView) v.findViewById(R.id.fragment_room_recycler);
+        mRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.fragment_room_swipe_refresh_layout);
+        return v;
     }
 
     @Override
@@ -71,7 +78,8 @@ public class RoomControlFragment extends Fragment implements OnRoomWidgetChanged
             mAdapter.setOnRoomWidgetChangedListener(this);
             mList.setAdapter(mAdapter);
         }
-
+        mRefreshHandler = new Handler();
+        mRefreshLayout.setOnRefreshListener(this);
         ((ActivityMain)getActivity()).registerOnRoomWidgetDataReceivedListener(mRoomId, this);
         ((ActivityMain)getActivity()).registerOnBtServiceStateChangedListener(this);
     }
@@ -113,8 +121,29 @@ public class RoomControlFragment extends Fragment implements OnRoomWidgetChanged
         }
     }
 
+
     @Override
     public void onRoomWidgetDataReceived(Room data) {
         setRoomWidgets(data.getRoomId(), data.getRoomWidgets());
+        if(mRefreshing) {
+            mRefreshLayout.setRefreshing(false);
+        }
     }
+
+    @Override
+    public void onRefresh() {
+        /* User performed a swipe-to-refresh gesture. Request to update data */
+        mRefreshing = true;
+        ((ActivityMain)getActivity()).requestRoomConfiguration();
+        mRefreshHandler.postDelayed(mRefreshRunnable, 1000);
+    }
+
+    private Runnable mRefreshRunnable= new Runnable() {
+        @Override
+        public void run() {
+            if(mRefreshing && mRefreshLayout != null) {
+                mRefreshLayout.setRefreshing(false);
+            }
+        }
+    };
 }

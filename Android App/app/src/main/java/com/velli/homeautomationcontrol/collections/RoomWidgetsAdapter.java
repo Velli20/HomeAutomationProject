@@ -69,12 +69,7 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mWidgets = widgets;
     }
 
-    public void updateWidget(RoomWidget widget) {
-        if(widget != null && mWidgets != null && mWidgets.containsKey(widget.mId)) {
-            mWidgets.get(widget.mId).updateValues(widget);
-            notifyDataSetChanged();
-        }
-    }
+
 
     public void setWidgetsEnabled(boolean enabled) {
         mWidgetsEnabled = enabled;
