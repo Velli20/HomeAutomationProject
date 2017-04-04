@@ -14,7 +14,7 @@ void BSP_TouchUpdate(void);
 void BSP_Background(void);
 
 HAL_StatusTypeDef BSP_RTC_SetDate(uint8_t day, uint8_t month, uint8_t year);
-HAL_StatusTypeDef BSP_RTC_SetTime(uint8_t hours, uint8_t minutes, uint8_t seconds);
+HAL_StatusTypeDef BSP_RTC_SetTime(int hours, int minutes, int seconds);
 
 HAL_StatusTypeDef BSP_RTC_Init(void);
 RTC_TimeTypeDef BSP_RTC_GetTime(void);

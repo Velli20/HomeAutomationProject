@@ -42,7 +42,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 	WM_HWIN hItem;
 	int NCode;
 	int Id;
-	int valueMinutes = 0;
+	int hours;
+	int minutes;
+	/* Get current RTC time */
+	RTC_TimeTypeDef stimestructureget = BSP_RTC_GetTime();
 
 	switch (pMsg->MsgId) {
 	case WM_INIT_DIALOG:
@@ -50,10 +53,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_HOURS);
 		SPINBOX_SetFont(hItem, GUI_FONT_16B_1);
 		SPINBOX_SetRange(hItem, SPINBOX_HOUR_RANGE_MIN, SPINBOX_HOUR_RANGE_24H_MAX);
+		SPINBOX_SetValue(hItem, stimestructureget.Hours);
 
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_MINUTES);
 		SPINBOX_SetFont(hItem, GUI_FONT_13B_ASCII);
 		SPINBOX_SetRange(hItem, SPINBOX_MINUTE_RANGE_MIN, SPINBOX_MINUTE_RANGE_MAX);
+		SPINBOX_SetValue(hItem, stimestructureget.Minutes);
 
 		/* Initialization of return icon */
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_VIEW_RETURN);
@@ -87,7 +92,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			case WM_NOTIFICATION_MOVED_OUT:
 				break;
 			case WM_NOTIFICATION_VALUE_CHANGED:
-				hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_HOURS);
 
 
 				break;
@@ -103,18 +107,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			case WM_NOTIFICATION_MOVED_OUT:
 				break;
 			case WM_NOTIFICATION_VALUE_CHANGED:
-				hItem = WM_GetDialogItem(pMsg->hWin, ID_SPINBOX_MINUTES);
 
-				if(valueMinutes == 0 && SPINBOX_GetValue(hItem) == SPINBOX_MINUTE_RANGE_MIN) {
-					valueMinutes = (SPINBOX_MINUTE_RANGE_MAX -1);
-					SPINBOX_SetValue(hItem, (SPINBOX_MINUTE_RANGE_MAX -1));
-
-				} else if(valueMinutes == 59 && SPINBOX_GetValue(hItem) == SPINBOX_MINUTE_RANGE_MAX) {
-					valueMinutes = (SPINBOX_MINUTE_RANGE_MIN +1);
-					SPINBOX_SetValue(hItem, (SPINBOX_MINUTE_RANGE_MIN +1));
-				} else {
-					valueMinutes = SPINBOX_GetValue(hItem);
-				}
 
 				break;
 			}
@@ -125,6 +118,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 				break;
 			case WM_NOTIFICATION_RELEASED:
 				WM_HideWindow(hThisWindow);
+				break;
+			}
+			break;
+		case ID_IMAGE_VIEW_SAVE:
+			switch (NCode) {
+			case WM_NOTIFICATION_RELEASED:
+				hours = SPINBOX_GetValue(WM_GetDialogItem(hThisWindow, ID_SPINBOX_HOURS));
+				minutes = SPINBOX_GetValue(WM_GetDialogItem(hThisWindow, ID_SPINBOX_MINUTES));
+				BSP_RTC_SetTime(hours, minutes, 0);
 				break;
 			}
 			break;

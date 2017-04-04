@@ -6,6 +6,7 @@
 __IO ITStatus UpdateTemperature = RESET;
 __IO ITStatus SdCardInserted = RESET;
 __IO ITStatus UpdateStatusBarTime = RESET;
+__IO ITStatus BspBackground= RESET;
 
 /* Declared in SerialCommandWriterReader.c */
 extern __IO ITStatus UartRxReady;
@@ -30,8 +31,6 @@ static void CPU_CACHE_Enable(void);
 static void Main_UpdateTemperatureReading(void);
 
 
-
-extern void MainTask(void);
 
 
 /**
@@ -145,6 +144,10 @@ int main(void) {
 			Menu_StatusBarUpdateDateTime();
 			UpdateStatusBarTime = RESET;
 		}
+		if(BspBackground == SET) {
+			BSP_Background();
+			BspBackground = RESET;
+		}
 	}
 }
 
@@ -158,7 +161,7 @@ int main(void) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 	if(htim->Instance == TIM3) {
-		BSP_Background();
+		BspBackground = SET;
 	} else if(htim->Instance == TIM7) {
 
 		UpdateTemperature = SET;

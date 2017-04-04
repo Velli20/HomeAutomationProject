@@ -73,7 +73,7 @@ HAL_StatusTypeDef BSP_RTC_SetDate(uint8_t day, uint8_t month, uint8_t year) {
  * @param  seconds: Specifies the RTC Time Seconds
  * @retval HAL_StatusTypeDef: HAL_OK if setting time succeeded
  */
-HAL_StatusTypeDef BSP_RTC_SetTime(uint8_t hours, uint8_t minutes, uint8_t seconds) {
+HAL_StatusTypeDef BSP_RTC_SetTime(int hours, int minutes, int seconds) {
   RTC_TimeTypeDef stimestructure;
 
   stimestructure.Hours = hours;
@@ -83,7 +83,7 @@ HAL_StatusTypeDef BSP_RTC_SetTime(uint8_t hours, uint8_t minutes, uint8_t second
   stimestructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE ;
   stimestructure.StoreOperation = RTC_STOREOPERATION_RESET;
 
-  if (HAL_RTC_SetTime(&RtcHandle, &stimestructure, RTC_FORMAT_BCD) != HAL_OK) {
+  if (HAL_RTC_SetTime(&RtcHandle, &stimestructure, RTC_FORMAT_BIN) != HAL_OK) {
 	  return HAL_ERROR;
   }
 
@@ -162,7 +162,7 @@ HAL_StatusTypeDef BSP_RTC_Init(void) {
 		/* Initialization Error */
 		return HAL_ERROR;
 	}
-	BSP_RTC_SetTime(4, 0, 0);
+	BSP_RTC_SetTime(4, 50, 0);
 	BSP_RTC_SetDate(20, 1, 17);
 	return HAL_OK;
 }
