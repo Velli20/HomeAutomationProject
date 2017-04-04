@@ -9,7 +9,10 @@ Things that are currently working:
 - Remote controlling via bluetooth connection on Android
 - General UI
 
-![UI](https://github.com/Velli20/HomeAutomationProject/blob/master/UI%20pictures/STM32F746G-DISCO_MENU.jpg?raw=true)
+Mockup pic of UI
+-------------
+<img src="https://github.com/Velli20/HomeAutomationProject/blob/master/UI%20pictures/STM32F746G-DISCO_MENU.jpg?raw=true" width="400">
+
 
 ## Example of configuration file
 
