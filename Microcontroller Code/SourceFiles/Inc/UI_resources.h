@@ -7,7 +7,7 @@
 #include "WM.h"
 
 /* Defines */
-#define __TRANSLATION_FIN							/* Use finnish translation for UI */
+#define __TRANSLATION_EN							/* Use finnish translation for UI */
 
 /* Colors */
 #define LEMON       								0x00d6d3
@@ -95,6 +95,7 @@
 
 /* Window_settings_time.c translations */
 #define WINDOW_TIME_SETTINGS_WINDOW_TITLE 			"Aseta aika"
+#define WINDOW_DATE_SETTINGS_WINDOW_TITLE 			"Aseta p‰iv‰m‰‰r‰"
 #define WINDOW_TIME_SETTINGS_BUTTON_SAVE_TITLE		"Tallenna"
 #define WINDOW_DATE_SETTINGS_BUTTON_SAVE_TITLE		"Tallenna"
 
@@ -112,6 +113,50 @@
 
 
 #endif /* __TRANSLATION_FIN */
+
+#ifdef __TRANSLATION_EN
+
+/* Window_lights.c translations */
+#define LIGHTS_WINDOW_TITLE							"Lights"
+#define LIGHTS_ITEM_TEXT_LIGHTS_ON					"ON"
+#define LIGHTS_ITEM_TEXT_LIGHTS_OFF					"OFF"
+#define LIGHTS_NO_NAME								"(NO NAME)" 		/* List item text if light widget name is null or empty */
+
+/* Window_temperature.c translations */
+#define THERMOSTAT_WINDOW_TITLE						"Temperature"
+#define THERMOSTAT_NO_NAME							"(NO NAME)"	    /* List item text if thermostat widget name is null or empty */
+#define THERMOSTAT_TARGET_TEMPERATURE   			"Target"
+#define THERMOSTAT_MEASURED_TEMPERATURE   			"Measured"
+
+/* Window_settings.c translations */
+#define SETTINGS_WINDOW_TITLE 						"Settings"
+#define SETTINGS_MENU_ITEM_DATE						"Date"
+#define SETTINGS_MENU_ITEM_TIME						"Time"
+#define SETTINGS_MENU_ITEM_WIFI						"WiFi"
+#define SETTINGS_MENU_ITEM_BLUETOOTH				"Bluetooth"
+#define SETTINGS_MENU_ITEM_ETHERNET					"Ethernet"
+#define SETTINGS_MENU_ITEM_ROOM_CONFIGURATION 		"Room configuration"
+
+/* Window_settings_time.c translations */
+#define WINDOW_TIME_SETTINGS_WINDOW_TITLE 			"Set time"
+#define WINDOW_DATE_SETTINGS_WINDOW_TITLE 			"Set date"
+#define WINDOW_TIME_SETTINGS_BUTTON_SAVE_TITLE		"Save"
+#define WINDOW_DATE_SETTINGS_BUTTON_SAVE_TITLE		"Save"
+
+/* Window_menu.c translations */
+#define WINDOW_MENU_MENU_ITEM_LIGHTS				"Lights"
+#define WINDOW_MENU_MENU_ITEM_TMEPERATURE			"Temperature"
+#define WINDOW_MENU_MENU_ITEM_COMMANDS				"Commands"
+#define WINDOW_MENU_MENU_ITEM_SETTINGS				"Settrings"
+
+/* Window_room_configuration.c translations */
+#define WINDOW_ROOM_CONFIGURATION_TITLE				"Room configuration"
+#define WINDOW_ROOM_CONFIGURATION_WIDGET_NO_NAME    "(NO NAME)"
+#define WINDOW_ROOM_CONFIGURATION_ROOM_NO_NAME      "(NO NAME)"
+
+
+
+#endif /* __TRANSLATION_EN */
 
 
 

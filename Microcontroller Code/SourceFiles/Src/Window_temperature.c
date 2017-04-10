@@ -27,6 +27,8 @@ static WM_HWIN hThisWindow;
 static int selectedTemperatureWidget = 0;
 static int selectedTemperatureWidgetId;
 
+extern uint8_t temperatureReading;
+
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_TEMPERATURE, 0, 0, 480, 272, 0, 0x0, 0 },
@@ -199,7 +201,7 @@ static void Temperature_InitRoomList(const WM_HWIN hItem) {
 
 			if (thermostatWidget) {
 				char temperatureText[20];
-				sprintf(temperatureText, "%s %d %s", THERMOSTAT_MEASURED_TEMPERATURE, thermostatWidget->intValue, TEMPERATURE_UNIT);
+				sprintf(temperatureText, "%s %d %s", THERMOSTAT_MEASURED_TEMPERATURE, temperatureReading, TEMPERATURE_UNIT);
 				if((thermostatWidget->name) && strlen((thermostatWidget->name)) > 0){
 					/* Add list item with a name of the thermostat */
 					SWIPELIST_AddItem(hItem, (thermostatWidget->name), ROOMS_LIST_ITEM_HEIGHT);
@@ -300,7 +302,7 @@ static void Temperature_SetFocusedTemperatureWidget(int position) {
 		sprintf(temperatureString, "%s %d %s", THERMOSTAT_TARGET_TEMPERATURE, thermWidget->intValueTarget, TEMPERATURE_UNIT);
 		TEXT_SetText(hItemTargetTemp, temperatureString);
 		/* Format current temperature string */
-		sprintf(temperatureString, "%d %s", thermWidget->intValue, TEMPERATURE_UNIT);
+		sprintf(temperatureString, "%d %s", temperatureReading, TEMPERATURE_UNIT);
 		TEXT_SetText(hItemCurrentTemp, temperatureString);
 	}
 	free(thermostats);

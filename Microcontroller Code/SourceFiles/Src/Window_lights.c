@@ -37,7 +37,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 		{ TEXT_CreateIndirect, LIGHTS_WINDOW_TITLE, ID_TEXT_LIGHTS_RETURN, 65, 19, 80, 20, 0, 0x0, 0 },
 		{ SWIPELIST_CreateIndirect, NULL, ID_LIGTHS_SWIPE_LIST, 0, 59, 240, 214, 0, 0x0, 0 },
         { IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_LIGHTS_SELECTION, 302, 78, 116, 116, 0, 0, 0 },
-        { TEXT_CreateIndirect, NULL, ID_TEXT_LIGHTS_SELECTION, 322, 176, 80, 20, 0, 0x0, 0 },};
+        { TEXT_CreateIndirect, NULL, ID_TEXT_LIGHTS_SELECTION, 292, 176, 140, 20, 0, 0x0, 0 },};
 
 /* Static code */
 
