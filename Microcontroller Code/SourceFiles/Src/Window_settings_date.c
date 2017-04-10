@@ -29,7 +29,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_SAVE_DATE, 10, 216, 48, 48, 0, 0, 0 },
 		{ TEXT_CreateIndirect, WINDOW_DATE_SETTINGS_BUTTON_SAVE_TITLE, ID_TEXT_SAVE, 65, 230, 80, 20, 0, 0x0, 0 },
 		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_RETURN, 10, 5, 48, 48, 0, 0, 0 },
-		{ TEXT_CreateIndirect, WINDOW_TIME_SETTINGS_WINDOW_TITLE, ID_TEXT_RETURN, 65, 20, 80, 20, 0, 0x0, 0 }, };
+		{ TEXT_CreateIndirect, WINDOW_DATE_SETTINGS_WINDOW_TITLE, ID_TEXT_RETURN, 65, 20, 80, 20, 0, 0x0, 0 }, };
 
 /* Static code */
 

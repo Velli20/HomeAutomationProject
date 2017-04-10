@@ -95,16 +95,16 @@
     <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery_sd.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery_sd.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_i2c.c" type="1"/>
+    <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery_ts.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery_ts.c" type="1"/>
     <File name="Components/rk043fn48h" path="" type="2"/>
     <File name="Icons/BITMAP_return.c" path="SourceFiles/Icons/BITMAP_return.c" type="1"/>
-    <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery_ts.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery_ts.c" type="1"/>
     <File name="BSP/STM32746G-Discovery" path="" type="2"/>
     <File name="Middlewares/FatFs" path="" type="2"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dcmi_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dcmi_ex.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.c" type="1"/>
     <File name="Utilities/Fonts/Font32SL_AA4.c" path="SourceFiles/Utilities/Fonts/Font32SL_AA4.c" type="1"/>
-    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spdifrx.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spdifrx.c" type="1"/>
     <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery_eeprom.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery_eeprom.c" type="1"/>
+    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spdifrx.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spdifrx.c" type="1"/>
     <File name="Utilities/Fonts" path="" type="2"/>
     <File name="Middlewares/FatFs/src/drivers" path="" type="2"/>
     <File name="Components/wm8994" path="" type="2"/>
@@ -121,16 +121,16 @@
     <File name="BSP" path="" type="2"/>
     <File name="Icons/BITMAP_settings.c" path="SourceFiles/Icons/BITMAP_settings.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spi.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_spi.c" type="1"/>
+    <File name="Utilities/Fonts/Font32S_AA4.c" path="SourceFiles/Utilities/Fonts/Font32S_AA4.c" type="1"/>
     <File name="Middlewares/FatFs/src/option/unicode.c" path="SourceFiles/Middlewares/FatFs/src/option/unicode.c" type="1"/>
     <File name="Middlewares/FatFs/src/drivers/sd_diskio.c" path="SourceFiles/Middlewares/FatFs/src/drivers/sd_diskio.c" type="1"/>
-    <File name="Utilities/Fonts/Font32S_AA4.c" path="SourceFiles/Utilities/Fonts/Font32S_AA4.c" type="1"/>
     <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery_sdram.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery_sdram.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_qspi.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_qspi.c" type="1"/>
     <File name="Middlewares/FatFs/src/ff.c" path="SourceFiles/Middlewares/FatFs/src/ff.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_lptim.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_lptim.c" type="1"/>
     <File name="Middlewares/STemWin/Config/Src/LCDConf.c" path="SourceFiles/Middlewares/STemWin/Config/Src/LCDConf.c" type="1"/>
-    <File name="Src/RoomWidget.c" path="SourceFiles/Src/RoomWidget.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_irda.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_irda.c" type="1"/>
+    <File name="Src/RoomWidget.c" path="SourceFiles/Src/RoomWidget.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_fmc.c" type="1"/>
     <File name="Src/Window_lights.c" path="SourceFiles/Src/Window_lights.c" type="1"/>
     <File name="Middlewares" path="" type="2"/>
@@ -149,8 +149,8 @@
     <File name="Src/Window_temperature.c" path="SourceFiles/Src/Window_temperature.c" type="1"/>
     <File name="Components" path="" type="2"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cec.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cec.c" type="1"/>
-    <File name="Drivers/CMSIS/Device/startup_stm32f746xx.s" path="SourceFiles/Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f746xx.s" type="1"/>
     <File name="Src/main.c" path="SourceFiles/Src/main.c" type="1"/>
+    <File name="Drivers/CMSIS/Device/startup_stm32f746xx.s" path="SourceFiles/Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f746xx.s" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nor.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nor.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sdram.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash.c" type="1"/>
@@ -166,8 +166,8 @@
     <File name="Icons/BITMAP_console_selected.c" path="SourceFiles/Icons/BITMAP_console_selected.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_usart.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_usart.c" type="1"/>
     <File name="Middlewares/FatFs/src/option" path="" type="2"/>
-    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_iwdg.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_iwdg.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pcd.c" type="1"/>
+    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_iwdg.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_iwdg.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nand.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_nand.c" type="1"/>
     <File name="Utilities/Fonts/Font23SL_AA4.c" path="SourceFiles/Utilities/Fonts/Font23SL_AA4.c" type="1"/>
     <File name="Components/ov9655" path="" type="2"/>
@@ -181,18 +181,18 @@
     <File name="Drivers" path="" type="2"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dac.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dac.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.c" type="1"/>
-    <File name="Components/ov9655/ov9655.c" path="SourceFiles/Components/ov9655/ov9655.c" type="1"/>
     <File name="Icons/BITMAP_lights_off.c" path="SourceFiles/Icons/BITMAP_lights_off.c" type="1"/>
+    <File name="Components/ov9655/ov9655.c" path="SourceFiles/Components/ov9655/ov9655.c" type="1"/>
     <File name="BSP/STM32746G-Discovery/Src/stm32746g_discovery.c" path="SourceFiles/BSP/STM32746G-Discovery/Src/stm32746g_discovery.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c" type="1"/>
     <File name="Src/RoomWidgetParser.c" path="SourceFiles/Src/RoomWidgetParser.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_can.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_can.c" type="1"/>
-    <File name="Middlewares/STemWin/OS/GUI_X.c" path="SourceFiles/Middlewares/STemWin/OS/GUI_X.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_smartcard_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_smartcard_ex.c" type="1"/>
+    <File name="Middlewares/STemWin/OS/GUI_X.c" path="SourceFiles/Middlewares/STemWin/OS/GUI_X.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c" type="1"/>
-    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash_ex.c" type="1"/>
     <File name="Icons/BITMAP_temperature.c" path="SourceFiles/Icons/BITMAP_temperature.c" type="1"/>
+    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_hash_ex.c" type="1"/>
     <File name="Components/ft5336/ft5336.c" path="SourceFiles/Components/ft5336/ft5336.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_sdmmc.c" type="1"/>
     <File name="Middlewares/STemWin/OS" path="" type="2"/>
@@ -200,10 +200,10 @@
     <File name="Src/DTH11.c" path="SourceFiles/Src/DTH11.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src" path="" type="2"/>
     <File name="Icons/BITMAP_sd_card.c" path="SourceFiles/Icons/BITMAP_sd_card.c" type="1"/>
-    <File name="Drivers/CMSIS/Device" path="" type="2"/>
     <File name="Icons" path="" type="2"/>
-    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c" type="1"/>
+    <File name="Drivers/CMSIS/Device" path="" type="2"/>
     <File name="Src/Window_settings.c" path="SourceFiles/Src/Window_settings.c" type="1"/>
+    <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sd.c" type="1"/>
     <File name="BSP/STM32746G-Discovery/Src" path="" type="2"/>
     <File name="Icons/BITMAP_save.c" path="SourceFiles/Icons/BITMAP_save.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sai_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sai_ex.c" type="1"/>
@@ -216,14 +216,14 @@
     <File name="Drivers/CMSIS/Device/system_stm32f7xx.c" path="SourceFiles/Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/system_stm32f7xx.c" type="1"/>
     <File name="Middlewares/STemWin/Config" path="" type="2"/>
     <File name="Icons/BITMAP_lights.c" path="SourceFiles/Icons/BITMAP_lights.c" type="1"/>
-    <File name="Icons/BITMAP_lights_on.c" path="SourceFiles/Icons/BITMAP_lights_on.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sram.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_sram.c" type="1"/>
+    <File name="Icons/BITMAP_lights_on.c" path="SourceFiles/Icons/BITMAP_lights_on.c" type="1"/>
     <File name="Icons/BITMAP_console.c" path="SourceFiles/Icons/BITMAP_console.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c" type="1"/>
     <File name="Components/ft5336" path="" type="2"/>
     <File name="Drivers/CMSIS" path="" type="2"/>
-    <File name="Src/stm32f7xx_hal_msp.c" path="SourceFiles/Src/stm32f7xx_hal_msp.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_usb.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_usb.c" type="1"/>
+    <File name="Src/stm32f7xx_hal_msp.c" path="SourceFiles/Src/stm32f7xx_hal_msp.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_adc_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_adc_ex.c" type="1"/>
     <File name="Src/BSP.c" path="SourceFiles/Src/BSP.c" type="1"/>
     <File name="Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rtc_ex.c" path="SourceFiles/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rtc_ex.c" type="1"/>
