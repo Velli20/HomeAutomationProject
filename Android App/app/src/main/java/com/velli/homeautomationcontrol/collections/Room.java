@@ -27,6 +27,7 @@
 package com.velli.homeautomationcontrol.collections;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class Room {
@@ -49,6 +50,26 @@ public class Room {
             mRoomWidgets = new LinkedHashMap<>();
         }
         mRoomWidgets.put(id, widget);
+    }
+
+    public void updateRoomData(Room update) {
+        this.mRoomName = update.mRoomName;
+        if(update.mRoomWidgets == null) {
+            return;
+        } else if(mRoomWidgets == null) {
+            this.mRoomWidgets = update.mRoomWidgets;
+            return;
+        }
+
+        for(Map.Entry<Integer, RoomWidget> widget : update.mRoomWidgets.entrySet()) {
+            int id = widget.getKey();
+            RoomWidget widgetToUpdate = mRoomWidgets.get(id);
+            RoomWidget updateWidget = widget.getValue();
+
+            if(widgetToUpdate != null && updateWidget != null) {
+                widgetToUpdate.updateValues(updateWidget);
+            }
+        }
     }
 
     public LinkedHashMap<Integer, RoomWidget> getRoomWidgets() {

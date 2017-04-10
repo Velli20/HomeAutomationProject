@@ -260,5 +260,37 @@ struct RoomWidget * RoomWidget_GetRoomWidgetWithId(struct RoomWidgetList * list,
 	return NULL;
 }
 
+/**
+ * @brief  Get pointer to Room structure where this one widget belongs
+ * @param  list: Pointer to RoomWidgetList
+ * @param  widget: Pointer to the RoomWidget structure
+ * @retval pointer to the Room structure or NULL
+ */
+struct Room * RoomWidget_GetRoomForRoomWidget(struct RoomWidgetList * list, struct RoomWidget * widget) {
+	if (!list || !widget) {
+		return NULL;
+	}
+
+	struct Room* ptrRoom = list->head;
+	int idToSearch = widget->id;
+
+	while (ptrRoom) {
+		if (ptrRoom->widgets) {
+
+			struct RoomWidget* ptrWidget = ptrRoom->widgets->head;
+
+			while (ptrWidget) {
+				if (ptrWidget->id == idToSearch) {
+					return ptrRoom;
+				}
+				ptrWidget = ptrWidget->next;
+			}
+
+		}
+		ptrRoom = ptrRoom->next;
+	}
+	return NULL;
+}
+
 
 /* End of file */

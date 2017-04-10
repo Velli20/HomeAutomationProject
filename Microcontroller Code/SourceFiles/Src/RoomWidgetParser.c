@@ -1,9 +1,12 @@
 #include "RoomWidgetParser.h"
 
 
-/* LINKED_LIST declared in main.c */
-extern struct LINKED_LIST UartCommands;
-
+/* Private function prototypes */
+static void RoomWidgetParser_ParseStringValue(const ezxml_t node, char ** target);
+static void RoomWidgetParser_CopyStringValue(const char * valueToCopy, char ** target);
+static int RoomWidgetParser_ParseIntegerValue(const ezxml_t node, int defaultValue);
+static int RoomWidgetParser_ConvertStringToIntegerValue(const char * valueToConvert, int defaultValue);
+static int RoomWidgetParser_ParseBoolValue(const ezxml_t node);
 
 /**
  * @brief  Parse room configuration xml file that contains all
@@ -16,13 +19,13 @@ extern struct LINKED_LIST UartCommands;
  * @retval Pointer to RoomList struct that contains
  * 		   all parsed parameters
  */
-struct RoomList* RoomWidgetParser_ParseString(char * xmlString, size_t lenght) {
+struct RoomList* RoomWidgetParser_ParseString(char * xmlString, size_t length) {
 	struct RoomList *list = NULL;
-	if(!xmlString || lenght == 0) {
+	if(!xmlString || length == 0) {
 		return NULL;
 	}
 
-	ezxml_t node = ezxml_parse_str(xmlString, lenght);
+	ezxml_t node = ezxml_parse_str(xmlString, length);
 
 	if(node) {
 		list = RoomWidgetParser_ParseData(node);
@@ -44,7 +47,7 @@ struct RoomList* RoomWidgetParser_ParseData(const ezxml_t a_node) {
 		return NULL;
 	}
 	/* Search for <Room></Room> tags */
-	ezxml_t roomNode = ezxml_child(a_node, ELEMENT_ROOM);
+	ezxml_t roomNode = ezxml_child(a_node, XML_TAG_ROOM);
 	if(!roomNode) {
 		/* No room tags in xml file */
 		return NULL;
@@ -55,6 +58,7 @@ struct RoomList* RoomWidgetParser_ParseData(const ezxml_t a_node) {
 		/* Memory allocation failed */
 		return NULL;
 	}
+
 	/* Iterate trough <Room></Room> tags */
 	while (roomNode) {
 		/* Parse the data that is wrapped inside tags*/
@@ -70,15 +74,30 @@ struct RoomList* RoomWidgetParser_ParseData(const ezxml_t a_node) {
 }
 
 /**
+ * @brief  Try to parse requestCode attribute from RoomConfiguration node
+ * @param  roomConfiguration: Pointer to the xml node
+ * @retval request code or -1 if operation was unsuccessful
+ */
+int RoomWidgetParser_ParseRequestCode(const ezxml_t roomConfiguration) {
+	if(!roomConfiguration) {
+		return -1;
+	}
+	return RoomWidgetParser_ConvertStringToIntegerValue(ezxml_attr(roomConfiguration, XML_ATTRIBUTE_REQUEST_CODE),-1);
+}
+
+/**
  * @brief  Search for the widget data that is wrapped with <RoomWidget></RoomWidget> tags
  * 		   and parse it.
  * @param  roomNode: Pointer to the xml node wrapped with <Room></Room> tags
- * @retval Room struct
+ * @retval Room structure
  */
 struct Room* RoomWidgetParser_ParseRoom(const ezxml_t roomNode) {
 	if(!roomNode) {
 		return NULL;
 	}
+	/* Default value for the room id if not defined in xml*/
+	static int roomIdDeafult = 0;
+
 	struct Room *room = calloc(1, sizeof(struct Room));
 	if (!room) {
 		/* Memory allocation failed */
@@ -87,33 +106,28 @@ struct Room* RoomWidgetParser_ParseRoom(const ezxml_t roomNode) {
 
 	room->widgets = calloc(1, sizeof(struct RoomWidgetList));
 	if(!(room->widgets)) {
+		/* Memory allocation failed. Free allocated memory for Room structure */
+		free(room);
 		return NULL;
 	}
 
-	const char *roomName = ezxml_attr(roomNode, ATTRIBUTE_NAME);
-	const char *roomId = ezxml_attr(roomNode, ATTRIBUTE_ID);
-
-	ezxml_t widgetNode = ezxml_child(roomNode, ELEMENT_WIDGET);
+	/* Search for <RoomWidget> tags */
+	ezxml_t widgetNode = ezxml_child(roomNode, XML_TAG_ROOM_WIDGET);
 
 	while (widgetNode) {
+		/* try to parse RoomWidget */
 		struct RoomWidget * widget = RoomWidgetParser_ParseWidget(widgetNode);
 
-		if (widget && room) {
+		if (widget) {
 			RoomWidget_AddWidgetToRoom(room, widget);
 		}
 		widgetNode = widgetNode->next;
 	}
 
-	if (roomId) {
-		room->id = strtol(roomId, NULL, 0);
-	}
-
-	if (roomName) {
-		char * roomNameCpy = calloc(strlen(roomName), sizeof(char));
-		strcpy(roomNameCpy, roomName);
-		room->name = roomNameCpy;
-	}
-
+	/* Try to parse room widget name. name attribute*/
+	RoomWidgetParser_CopyStringValue(ezxml_attr(roomNode, XML_ATTRIBUTE_ROOM_NAME), &(room->name));
+	/* Try to parse room id. id attribute */
+	(room->id) = RoomWidgetParser_ConvertStringToIntegerValue(ezxml_attr(roomNode, XML_ATTRIBUTE_ROOM_ID), roomIdDeafult++);
 
 	return room;
 }
@@ -128,53 +142,133 @@ struct RoomWidget* RoomWidgetParser_ParseWidget(const ezxml_t widgetNode) {
 		return NULL;
 	}
 	struct RoomWidget *widget = calloc(1, sizeof(struct RoomWidget));
+	/* Default value for the room id if not defined in xml */
+	static int roomDefaultId = 0;
 
 	if(!widget) {
 		/* Memory allocation failed */
 		return NULL;
 	}
 
-	if (ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_ID)) {
-		const char * id = ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_ID)->txt;
-		if (id) {
-			int idCpy = strtol(id, NULL, 0);
-			widget->id = idCpy;
-		}
-	}
-	if (ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_TYPE)) {
-		const char * type = ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_TYPE)->txt;
-		if (type) {
-			int typeCpy = strtol(type, NULL, 0);
-			widget->type = typeCpy;
-		}
-	}
-	if (ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_NAME)) {
-		const char * name = ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_NAME)->txt;
-		if (name) {
-			size_t lenght = strlen(name);
-			if (lenght > 0) {
-				char * nameCpy = calloc(lenght, sizeof(char));
-				strncpy(nameCpy, name, lenght);
-				widget->name = nameCpy;
-			}
-		}
-	}
-	if (ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_INT_VALUE)) {
-		const char * intValue = ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_INT_VALUE)->txt;
-		if (intValue) {
-			int intValueCpy = strtol(intValue, NULL, 0);
-			widget->intValue = intValueCpy;
-		}
-	}
-	if (ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_BOOL_VALUE)) {
-		const char * boolValue = ezxml_child(widgetNode, ELEMENT_ROOM_WIDGET_BOOL_VALUE)->txt;
-		if (boolValue) {
-			widget->boolValue = strcmp(boolValue, "true") == 0 ? 1 : 0;
-		}
+	/* Try to parse <id> tags */
+	(widget->id) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_ID), roomDefaultId++);
 
-	}
+	/* Try to parse <type> tags */
+	(widget->type) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_TYPE), -1);
 
+	/* Try to parse <name> tags */
+	RoomWidgetParser_ParseStringValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_NAME), &(widget->name));
 
+	/* Try to parse <intValue> tags */
+	(widget->intValue) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_INT_VALUE), 0);
+
+	/* Try to parse <intTargetValue> tags */
+	(widget->intValueTarget) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_INT_TARGET_VALUE), 0);
+
+	/* Try to parse <boolValue> tags */
+	(widget->boolValue) = RoomWidgetParser_ParseBoolValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_BOOL_VALUE));
+
+	/* Try to parse <pin> tags */
+	(widget->arduinoPin) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_PIN), -1);
+
+	/* Try to parse <status> tags */
+	(widget->status) = RoomWidgetParser_ParseIntegerValue(ezxml_child(widgetNode, XML_TAG_ROOM_WIDGET_STATUS), 0);
 
 	return widget;
+}
+
+/**
+ * @brief  Parse string value from ezxml_t structure
+ * @param  node: ezxml_t structure to parse
+ * @param  target: Pointer to pointer to the char array where to store array
+ */
+static void RoomWidgetParser_ParseStringValue(const ezxml_t node, char ** target) {
+	if(!node || !(node->txt)) {
+		return;
+	}
+	RoomWidgetParser_CopyStringValue(node->txt, target);
+}
+
+/**
+ * @brief  Copies char array pointed by valueToCopy to target
+ * @param  valueToCopy: Pointer to the source char array
+ * @param  target: Pointer to pointer to the destination char array
+ */
+static void RoomWidgetParser_CopyStringValue(const char * valueToCopy, char ** target) {
+	if(!valueToCopy) {
+		return;
+	}
+	size_t stringValueLength = strlen(valueToCopy);
+
+	if(stringValueLength == 0) {
+		/* Beware of zero length allocations */
+		return;
+	}
+
+	/* Allocate memory for copy */
+	char * stringValueCpy = calloc(stringValueLength+1, sizeof(char));
+
+	if(stringValueCpy) {
+
+		strcpy(stringValueCpy, valueToCopy);
+		/* Force null termination */
+		stringValueCpy[stringValueLength] = '\0';
+		*target = stringValueCpy;
+	}
+}
+
+/**
+ * @brief  Parse integer value from ezxml_t structure
+ * @param  node: ezxml_t structure to parse
+ * @retval parsed int value or deafult value if operation was unsuccessful
+ */
+static int RoomWidgetParser_ParseIntegerValue(const ezxml_t node, int defaultValue) {
+	if(!node || !(node->txt)) {
+		return defaultValue;
+	}
+	return RoomWidgetParser_ConvertStringToIntegerValue((node->txt), defaultValue);
+}
+
+/**
+ * @brief  Convert char array to integer
+ * @param  valueToConvert: Pointer to the char array to convert
+ * @param  defaultValue: Default value to return if char
+ *         array dosen't contain digits
+ * @retval parsed int value or default value if operation
+ *         was unsuccessful
+ */
+static int RoomWidgetParser_ConvertStringToIntegerValue(const char * valueToConvert, int defaultValue) {
+	if(!valueToConvert) {
+		return defaultValue;
+	}
+	char * integerTextEndPtr;
+
+	/* Try to parse long from string */
+	long result = strtol(valueToConvert, integerTextEndPtr, 0);
+
+	if (integerTextEndPtr == (valueToConvert)) {
+	    /* No value parsed */
+		return defaultValue;
+	}
+	if ((result == LONG_MAX || result == LONG_MIN)) {
+	    /* Out of range */
+		return defaultValue;
+	}
+	return ((int) result);
+}
+
+/**
+ * @brief  Parse bool value from ezxml_t structure
+ * @param  node: ezxml_t structure to parse
+ */
+static int RoomWidgetParser_ParseBoolValue(const ezxml_t node) {
+	if(!node || !(node->txt)) {
+		return 0;
+	}
+	const char * boolValue = node->txt;
+
+	if (strlen(boolValue) > 0) {
+		return (strcmp(boolValue, "true") == 0 ? 1 : 0);
+	}
+	return 0;
 }

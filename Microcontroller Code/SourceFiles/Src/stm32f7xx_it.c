@@ -121,7 +121,7 @@ void TIM7_IRQHandler(void) {
   * @brief  This function handles DMA interrupt request.
   * @param  None
   * @retval None
-  * @Note   This function is redefined in "main.h" and related to DMA
+  * @Note   This function is redefined in "SerialCommandWriterReader.h" and related to DMA
   *         used for USART data transmission
   */
 void USARTx_DMA_RX_IRQHandler(void) {
@@ -132,7 +132,7 @@ void USARTx_DMA_RX_IRQHandler(void) {
   * @brief  This function handles DMA interrupt request.
   * @param  None
   * @retval None
-  * @Note   This function is redefined in "main.h" and related to DMA
+  * @Note   This function is redefined in "SerialCommandWriterReader.h" and related to DMA
   *         used for USART data reception
   */
 void USARTx_DMA_TX_IRQHandler(void) {
@@ -143,7 +143,7 @@ void USARTx_DMA_TX_IRQHandler(void) {
   * @brief  This function handles UART interrupt request.
   * @param  None
   * @retval None
-  * @Note   This function is redefined in "main.h" and related to DMA
+  * @Note   This function is redefined in "SerialCommandWriterReader.h" and related to DMA
   *         used for USART data transmission
   */
 void USARTx_IRQHandler(void) {

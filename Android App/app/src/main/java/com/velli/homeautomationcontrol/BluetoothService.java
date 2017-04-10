@@ -222,24 +222,28 @@ public class BluetoothService {
             int bytes = 0;
             while(true) {
                 try {
-                    if(bytes < 4096) {
-                        buffer[bytes] = (byte) mInStream.read();
+                    byte b = (byte) mInStream.read();
+
+                    if(Constants.SERIAL_START_FLAG == (char)b) {
+                        /* Start of the transmission. Initialize buffer */
+                        buffer = new byte[4096];
+                        bytes=0;
+                    } else if(Constants.SERIAL_END_FLAG == (char)b) {
+                        /* End of the transmission */
+                        try {
+                            sendObjectToUiThread(new String(buffer, "UTF-8").substring(0, bytes));
+                        }   catch (IOException ignored) {}
+                    } else if(bytes < 4096) {
+                        buffer[bytes] = b;
                         bytes++;
                     }
+
                 } catch (IOException e) {
                     cancel();
                     break;
                 }
 
-                if (bytes == 4096 || (buffer[bytes -1] == '\n')||(buffer[bytes -1]=='\r')) {
-                    try {
 
-                        sendObjectToUiThread(new String(buffer, "UTF-8"));
-                    }   catch (IOException ignored) {}
-
-                    buffer = new byte[4096];
-                    bytes=0;
-                }
 
 
             }
@@ -250,6 +254,7 @@ public class BluetoothService {
             if(mState == Constants.STATE_CONNECTED && buffer != null) {
                 try {
                     mOutStream.write(buffer);
+                    mOutStream.flush();
                 } catch (IOException ignored) {
                 }
             }

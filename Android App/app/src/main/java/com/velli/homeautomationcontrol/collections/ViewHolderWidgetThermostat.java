@@ -24,11 +24,27 @@
  *
  */
 
-package com.velli.homeautomationcontrol.interfaces;
+package com.velli.homeautomationcontrol.collections;
 
+import android.support.v7.widget.AppCompatSeekBar;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.velli.homeautomationcontrol.collections.RoomWidget;
+import com.velli.homeautomationcontrol.R;
+import com.velli.homeautomationcontrol.views.RobotoLightTextView;
 
-public interface OnRoomWidgetChangedListener {
-    void onRoomWidgetChanged(RoomWidget widget);
+public class ViewHolderWidgetThermostat extends RecyclerView.ViewHolder {
+    public RobotoLightTextView mTitle;
+    public RobotoLightTextView mTemperature;
+    public RobotoLightTextView mTargetTemperature;
+    public AppCompatSeekBar mTargetTemperatureSeekBar;
+
+    public ViewHolderWidgetThermostat(View itemView) {
+        super(itemView);
+
+        mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_temperature_title);
+        mTemperature = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_temperature);
+        mTargetTemperature = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_target_temperature);
+        mTargetTemperatureSeekBar = (AppCompatSeekBar) itemView.findViewById(R.id.list_item_widget_temperature_seek_bar);
+    }
 }

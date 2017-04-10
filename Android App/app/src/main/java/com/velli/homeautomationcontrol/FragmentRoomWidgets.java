@@ -45,11 +45,11 @@ import com.velli.homeautomationcontrol.collections.RoomWidget;
 import com.velli.homeautomationcontrol.collections.RoomWidgetsAdapter;
 import com.velli.homeautomationcontrol.collections.SpacesItemDecoration;
 import com.velli.homeautomationcontrol.interfaces.OnBtServiceStateChangedListener;
-import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetChangedListener;
-import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetDataReceivedListener;
+import com.velli.homeautomationcontrol.interfaces.OnUserUpdatedWidgetStateListener;
+import com.velli.homeautomationcontrol.interfaces.OnRoomConfigurationReceivedListener;
 
 
-public class RoomControlFragment extends Fragment implements OnRoomWidgetChangedListener, OnBtServiceStateChangedListener, OnRoomWidgetDataReceivedListener, SwipeRefreshLayout.OnRefreshListener {
+public class FragmentRoomWidgets extends Fragment implements OnUserUpdatedWidgetStateListener, OnBtServiceStateChangedListener, OnRoomConfigurationReceivedListener, SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView mList;
     private SwipeRefreshLayout mRefreshLayout;
     private LinkedHashMap<Integer, RoomWidget> mWidgets;
@@ -110,23 +110,27 @@ public class RoomControlFragment extends Fragment implements OnRoomWidgetChanged
 
 
     @Override
-    public void onRoomWidgetChanged(RoomWidget widget) {
+    public void onUserUpdatedWidgetState(RoomWidget widget) {
         ((ActivityMain)getActivity()).commitRoomDataChanges(mRoomId, widget);
+    }
+
+    @Override
+    public void onRoomConfigurationReceived(Room data) {
+        setRoomWidgets(data.getRoomId(), data.getRoomWidgets());
+        if(mRefreshing) {
+            mRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void onRoomConfigurationUpdated(){
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onBluetoothStateChanged(int newState) {
         if(newState == Constants.STATE_CONNECTED && mAdapter != null) {
             mAdapter.setWidgetsEnabled(true);
-        }
-    }
-
-
-    @Override
-    public void onRoomWidgetDataReceived(Room data) {
-        setRoomWidgets(data.getRoomId(), data.getRoomWidgets());
-        if(mRefreshing) {
-            mRefreshLayout.setRefreshing(false);
         }
     }
 

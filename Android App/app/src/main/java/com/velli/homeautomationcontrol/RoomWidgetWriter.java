@@ -40,7 +40,7 @@ import com.velli.homeautomationcontrol.collections.Room;
 
 
 public class RoomWidgetWriter {
-    private static final String namespace = "";
+    public static final String namespace = "";
 
     public byte[] writeXml(LinkedHashMap<Integer, Room> widgets) {
         XmlSerializer serializer = Xml.newSerializer();
@@ -48,13 +48,13 @@ public class RoomWidgetWriter {
         try {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
-            serializer.startTag(namespace, Constants.XML_TAG_DATA);
+            serializer.startTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION);
 
             for(Room room : widgets.values()) {
                 writeRoom(room, serializer);
             }
 
-            serializer.endTag(namespace, Constants.XML_TAG_DATA);
+            serializer.endTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION);
             serializer.endDocument();
         } catch (Exception ignored) {}
 
@@ -67,41 +67,43 @@ public class RoomWidgetWriter {
         try {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
-            serializer.startTag(namespace, Constants.XML_TAG_DATA);
+            serializer.startTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION);
 
             writeRoom(room, serializer);
 
-            serializer.endTag(namespace, Constants.XML_TAG_DATA);
+            serializer.endTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION);
             serializer.endDocument();
         } catch (Exception ignored) {}
 
         return writer.toString().getBytes();
     }
 
-    public byte[] writeXml(int roomId, RoomWidget widget) {
+    public byte[] writeXml(int roomId, int requestCode, RoomWidget widget) {
         XmlSerializer serializer = Xml.newSerializer();
         StringWriter writer = new StringWriter();
+        writer.append(Constants.SERIAL_START_FLAG);
         try {
             serializer.setOutput(writer);
             serializer.startDocument("UTF-8", true);
-            serializer.startTag(namespace, Constants.XML_TAG_DATA);
+            serializer.startTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION_UPDATE);
+            serializer.attribute(namespace, Constants.XML_ATTRIBUTE_REQUEST_CODE, String.valueOf(requestCode));
             serializer.startTag(namespace, Constants.XML_TAG_ROOM);
-            serializer.attribute(namespace, Constants.XML_TAG_ID, String.valueOf(roomId));
+            serializer.attribute(namespace, Constants.XML_ATTRIBUTE_ROOM_ID, String.valueOf(roomId));
 
             writeWidget(widget, serializer);
 
             serializer.endTag(namespace, Constants.XML_TAG_ROOM);
-            serializer.endTag(namespace, Constants.XML_TAG_DATA);
+            serializer.endTag(namespace, Constants.XML_TAG_ROOM_CONFIGURATION_UPDATE);
             serializer.endDocument();
         } catch (Exception ignored) {}
-        writer.append("\r");
+        writer.append(Constants.SERIAL_END_FLAG);
         return writer.toString().getBytes();
     }
 
     private void writeRoom(Room room, XmlSerializer serializer) throws IOException {
         serializer.startTag(namespace, Constants.XML_TAG_ROOM);
-        serializer.attribute(namespace, Constants.XML_TAG_NAME, room.getRoomName());
-        serializer.attribute(namespace, Constants.XML_TAG_ID, String.valueOf(room.getRoomId()));
+        serializer.attribute(namespace, Constants.XML_ATTRIBUTE_ROOM_NAME, room.getRoomName());
+        serializer.attribute(namespace, Constants.XML_ATTRIBUTE_ROOM_ID, String.valueOf(room.getRoomId()));
 
         for(RoomWidget widget : room.getRoomWidgets().values()) {
             writeWidget(widget, serializer);
@@ -133,6 +135,11 @@ public class RoomWidgetWriter {
         serializer.startTag(namespace, Constants.XML_TAG_INT_VALUE);
         serializer.text(String.valueOf(widget.mIntValue));
         serializer.endTag(namespace, Constants.XML_TAG_INT_VALUE);
+
+        //Integer target value
+        serializer.startTag(namespace, Constants.XML_TAG_INT_TARGET_VALUE);
+        serializer.text(String.valueOf(widget.mIntTargetValue));
+        serializer.endTag(namespace, Constants.XML_TAG_INT_TARGET_VALUE);
 
         //Bool value
         serializer.startTag(namespace, Constants.XML_TAG_BOOL_VALUE);

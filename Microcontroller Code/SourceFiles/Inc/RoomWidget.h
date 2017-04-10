@@ -22,12 +22,16 @@ struct RoomWidgetList {
 };
 
 struct RoomWidget {
+	char * name;
+
 	int id;
 	int type;
-	char * name;
+
 	int intValue;
+	int intValueTarget;
 	int boolValue;
 	int status;
+	int arduinoPin;
 
 	struct RoomWidget * next;
 };
@@ -46,6 +50,7 @@ int RoomWidget_GetRoomCount(struct RoomList * list);
 int RoomWidget_GetWidgetCount(struct RoomWidgetList * list);
 
 struct RoomWidget * RoomWidget_GetRoomWidgetWithId(struct RoomWidgetList * list, int id);
+struct Room * RoomWidget_GetRoomForRoomWidget(struct RoomWidgetList * list, struct RoomWidget * widget);
 
 void RoomWidget_PopRoom(struct RoomList * list, int position);
 #endif /* __ROOMWIDGET_H */

@@ -43,6 +43,7 @@
     <string name="title_no_devices">Ei laitteita</string>
     <string name="title_device_no_name">(Nimetön)</string>
     <string name="title_room_temperature">Huoneen lämpötila</string>
+    <string name="title_room_target_temperature">Asetus</string>
     <string name="title_room_lights">Valot</string>
     <string name="title_room_lights_brightness">Kirkkaus</string>
     <string name="title_room_air_humidity">Ilmankosteus</string>

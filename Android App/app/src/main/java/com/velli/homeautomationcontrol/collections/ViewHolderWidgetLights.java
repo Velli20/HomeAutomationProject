@@ -26,52 +26,26 @@
 
 package com.velli.homeautomationcontrol.collections;
 
+import android.support.v7.widget.AppCompatSeekBar;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
+import android.view.View;
 
-public class RoomWidget {
-    public static int STATUS_UPDATES_PENDING = 0;
-    public static int STATUS_OK = 1;
-    public static int STATUS_FAILED= 2;
+import com.velli.homeautomationcontrol.R;
+import com.velli.homeautomationcontrol.views.RobotoLightTextView;
 
-    public int mType;
-    public int mId;
-    public int mStatus = STATUS_OK;
 
-    public String mName;
-    public boolean mBoolValue;
-    public int mIntValue;
-    public int mIntTargetValue;
 
-    public RoomWidget() {
+public class ViewHolderWidgetLights extends RecyclerView.ViewHolder {
+    public RobotoLightTextView mTitle;
+    public SwitchCompat mSwitch;
+    public AppCompatSeekBar mSeekBar;
 
+    public ViewHolderWidgetLights(View itemView) {
+        super(itemView);
+
+        mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_lights_title);
+        mSwitch = (SwitchCompat) itemView.findViewById(R.id.list_item_widget_lights_switch);
+        mSeekBar = (AppCompatSeekBar) itemView.findViewById(R.id.list_item_widget_lights_bightness);
     }
-
-    public void setType(int type) {
-        mType = type;
-    }
-
-    public void setId(int id) {
-        mId = id;
-    }
-
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public void setIntValue(int value) {
-        mIntValue = value;
-    }
-
-    public void setInTargetValue(int targetValue) {
-        mIntTargetValue = targetValue;
-    }
-
-    public void updateValues(RoomWidget widget) {
-        this.mBoolValue = widget.mBoolValue;
-        this.mIntValue = widget.mIntValue;
-        this.mIntTargetValue = widget.mIntTargetValue;
-        this.mStatus = widget.mStatus;
-        this.mType = widget.mType;
-        this.mName = widget.mName;
-    }
-
 }

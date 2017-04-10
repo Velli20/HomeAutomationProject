@@ -20,16 +20,14 @@ uint8_t rxindex = 0;
 
 char * txBuffer;
 
-/* LINKED_LIST declared in main.c */
-extern struct LINKED_LIST UartCommands;
 
 /* Private function prototypes */
-static void SerialCommandWriterReader_HandleRxData(uint8_t rxData[]);
+static void SerialCommandWriterReader_HandleRxData(char * rxDataBuffer, int bufferLenght);
 
 void SerialCommandWriterReader_UartConfig(void) {
-	/*##-1- Configure the UART peripheral ######################################*/
-	/* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-	/* UART configured as follows:
+	/* Configure the UART peripheral
+	 * Put the USART peripheral in the Asynchronous mode (UART Mode)
+	 * UART configured as follows:
 	 - Word Length = 8 Bits
 	 - Stop Bit = One Stop bit
 	 - Parity = None
@@ -46,18 +44,15 @@ void SerialCommandWriterReader_UartConfig(void) {
 	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
 
 	if (HAL_UART_DeInit(&UartHandle) != HAL_OK) {
-		LinkedList_add("ERROR1", true, &UartCommands);
+		/* Handle error */
 	}
 	if (HAL_UART_Init(&UartHandle) != HAL_OK) {
-		LinkedList_add("ERROR2", true, &UartCommands);
+		/* Handle error */
 	}
-
-	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
 	/* Put UART peripheral in reception process */
 	if(HAL_UART_Receive_DMA(&UartHandle, &rxBuffer, 1) != HAL_OK) {
-		LinkedList_add("ERROR3", true, &UartCommands);
+		/* Handle error */
 	}
-
 }
 
 
@@ -70,7 +65,6 @@ void SerialCommandWriterReader_UartConfig(void) {
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUart) {
 	/* Set transmission flag: trasfer complete*/
 	UartTxReady = SET;
-	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
 }
 
 /**
@@ -89,9 +83,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *hUart) {
   * @retval None
   */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *UartHandle) {
-	LinkedList_add("ERROR", true, &UartCommands);
+	/* Handle error */
 }
-
 
 /**
  * @brief  Read RX message in non blocking mode
@@ -102,24 +95,46 @@ void SerialCommandWriterReader_RxReadMessage() {
 	/* Clear the buffer to prevent overrun */
 	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
 
-	if (rxindex < RXBUFFERSIZE) {
-		/* Add that character to the string */
+	if (rxBuffer == SERIAL_START_FLAG) {
+		/* Start of the incoming data. Make sure buffer is clear */
+		goto clearBuffer;
+	} else if(rxBuffer == SERIAL_END_FLAG) {
+		/* End of data string. Try to process data */
+		goto read;
+	}
+
+	if (rxindex < RXBUFFERSIZE
+			&& rxBuffer != '\0'
+			&& rxBuffer != '\n'
+			&& rxBuffer != '\r'
+			&& rxBuffer != '\t') {
+		/* Add incoming character to the string buffer */
+
 		rxString[rxindex] = rxBuffer;
 		rxindex++;
+	} else {
+		/* Data is lost or has reached limit of the rx buffer */
+		goto read;
 	}
 
 
-	if (rxBuffer == '\r' || rxBuffer == '\n') {
-		/* Handle received data */
-		SerialCommandWriterReader_HandleRxData(rxString);
+	return;
 
-		/* Clear the string buffer */
-		SerialCommandWriterReader_ClearRxBuffer();
-	}
+	read:
 
-	if (rxindex >= (RXBUFFERSIZE)) {
-		SerialCommandWriterReader_ClearRxBuffer();
+	if (rxindex > 1) {
+		char * rxDataBuffer = calloc(rxindex, sizeof(char));
+		if (rxDataBuffer) {
+			strncpy(rxDataBuffer, rxString, rxindex);
+
+			/* Handle received data */
+			SerialCommandWriterReader_HandleRxData(rxDataBuffer, rxindex);
+		}
 	}
+	clearBuffer:
+	/* Clear the string buffer */
+	SerialCommandWriterReader_ClearRxBuffer();
+
 }
 
 /**
@@ -129,13 +144,21 @@ void SerialCommandWriterReader_RxReadMessage() {
  * @retval None
  */
 void SerialCommandWriterReader_TxWriteMessage(char * data, size_t lenght) {
-	if(!data || lenght > TXBUFFERSIZE) {
+	if(!data) {
 		return;
 	}
 
-	if(HAL_UART_Transmit_DMA(&UartHandle, data, lenght) != HAL_OK) {
-		LinkedList_add("ERROR4", true, &UartCommands);
+	while(HAL_UART_GetState(&UartHandle) == HAL_USART_STATE_BUSY_TX) {
+		; /* TODO: */
 	}
+
+
+
+	if (HAL_UART_Transmit_IT(&UartHandle, data, lenght) != HAL_OK) {
+		/* Handle error */
+	}
+
+
 }
 
 /**
@@ -144,6 +167,8 @@ void SerialCommandWriterReader_TxWriteMessage(char * data, size_t lenght) {
  * @retval None
  */
 void SerialCommandWriterReader_ClearTxBuffer(void) {
+	/* Clear the buffer to prevent overrun */
+	__HAL_UART_FLUSH_DRREGISTER(&UartHandle);
 	if(txBuffer) {
 		free(txBuffer);
 		txBuffer = NULL;
@@ -167,26 +192,33 @@ void SerialCommandWriterReader_ClearRxBuffer(void) {
  * @param  rxData: Pointer to the incoming serial data
  * @retval None
  */
-static void SerialCommandWriterReader_HandleRxData(uint8_t rxData[]) {
-	if(!rxData) {
+static void SerialCommandWriterReader_HandleRxData(char * rxDataBuffer, int bufferLenght) {
+	if(!rxDataBuffer || bufferLenght == 0) {
 		return;
 	}
 
 	/* Create ezxml structure out of the data string */
-	ezxml_t node = ezxml_parse_str(rxString, strlen(rxData));
+	ezxml_t node = ezxml_parse_str(rxDataBuffer, bufferLenght);
 
+	/* Char array where we store our response string */
+	char * message = calloc(50, sizeof(char));
 	if (node) {
 		/* Try to extract a command from the data string */
 		SERIAL_COMMAND command = SerialCommandParser_ParseCommand(node);
-		/* Char array where we store our response string */
-		char message[20];
+
 		if (command == SERIAL_COMMAND_UPDATE_WIDGET_STATUS) {
-			/* Message starts with <Data> tag. Try to update RoomConfiguration */
+			/* Message starts with <RoomConfigurationUpdate> tag. Try to update RoomConfiguration */
 			int result = RoomConfiguration_UpdateRoomState(node);
+			int requestCode = RoomWidgetParser_ParseRequestCode(node);
 
 			if(result == ROOM_UPDATE_RESULT_OK) {
 				/* RoomConfiguration was updated successfully */
-				sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_RESPONSE_OK);
+				if(requestCode != -1) {
+					sprintf(message, TAG_RESPONSE_FORMATTER_STRING_WITH_REQUEST_CODE, TAG_RESPONSE_OK, requestCode);
+				} else {
+					sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_RESPONSE_OK);
+				}
+
 			} else {
 				/* Failed to update RoomConfiguration */
 				sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_RESPONSE_UNKNOWN_COMMAND);
@@ -200,14 +232,13 @@ static void SerialCommandWriterReader_HandleRxData(uint8_t rxData[]) {
 			char * configuration = RoomConfiguration_GetRoomConfiguartionInXmlFormat();
 			if(configuration) {
 				SerialCommandWriterReader_TxWriteMessage(configuration, strlen(configuration));
-				/* Assign configuration string to txBuffer, so we can free it when writing is done */
 				txBuffer = configuration;
 			} else {
 				/* Internal error has occurred */
 				sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_DEVICE_INTERNAL_ERROR);
 				SerialCommandWriterReader_TxWriteMessage(message, strlen(message));
 			}
-		} else if (command == SERIAL_COMMAND_UNKNOWN_COMMAND) {
+		} else {
 			/* Command was not recognized */
 			sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_RESPONSE_UNKNOWN_COMMAND);
 			SerialCommandWriterReader_TxWriteMessage(message, strlen(message));
@@ -215,7 +246,13 @@ static void SerialCommandWriterReader_HandleRxData(uint8_t rxData[]) {
 
 		/* Free allocated ezxml structure */
 		ezxml_free(node);
+	} else {
+		/* Command was not recognized */
+		sprintf(message, TAG_RESPONSE_FORMATTER_STRING, TAG_RESPONSE_UNKNOWN_COMMAND);
+		SerialCommandWriterReader_TxWriteMessage(message, strlen(message));
 	}
+	txBuffer = message;
+	free(rxDataBuffer);
 }
 
 /* End of file */

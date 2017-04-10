@@ -47,22 +47,35 @@ public class Constants {
 
     public static final String DEVICE_NAME = "Device name";
 
-    public static final String COMMAND_GET_ROOM_CONFIGURATION = "<GetRoomConfiguration/>\r";
+    public static final String COMMAND_GET_ROOM_CONFIGURATION = "#<GetRoomConfiguration/>*";
 
 
     //XML tags
-    public static final String XML_TAG_DATA = "Data";
+    public static final String XML_TAG_ROOM_CONFIGURATION = "RoomConfiguration";
+    public static final String XML_TAG_ROOM_CONFIGURATION_UPDATE = "RoomConfigurationUpdate";
     public static final String XML_TAG_ROOM = "Room";
     public static final String XML_TAG_WIDGET = "RoomWidget";
     public static final String XML_TAG_ID = "id";
     public static final String XML_TAG_TYPE = "type";
     public static final String XML_TAG_NAME = "name";
     public static final String XML_TAG_INT_VALUE = "intValue";
+    public static final String XML_TAG_INT_TARGET_VALUE = "intTargetValue";
     public static final String XML_TAG_BOOL_VALUE = "boolValue";
     public static final String XML_TAG_STATUS = "status";
+
+    public static final String XML_ATTRIBUTE_REQUEST_CODE = "requestCode";
+    public static final String XML_ATTRIBUTE_ROOM_ID = "id";
+    public static final String XML_ATTRIBUTE_ROOM_NAME= "name";
 
     /* Response tags */
     public static final String XML_TAG_RESPONSE_COMMAND_UNKNOWN = "UnknownCommand";
     public static final String XML_TAG_RESPONSE_COMMAND_OK = "OK";
     public static final String XML_TAG_RESPONSE_COMMAND_INTERNAL_ERROR = "DeviceInternalError";
+
+
+    public static final int MAX_TARGET_TEMPERATURE_CELSIUS = 30;
+    public static final int MIN_TARGET_TEMPERATURE_CELSIUS = 2;
+
+    public static final char SERIAL_START_FLAG = '#';
+    public static final char SERIAL_END_FLAG = '*';
 }

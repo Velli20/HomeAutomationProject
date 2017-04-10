@@ -57,13 +57,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 
-import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetDataReceivedListener;
+import com.velli.homeautomationcontrol.interfaces.OnRoomConfigurationReceivedListener;
 
 public class ActivityMain extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final int REQUEST_CODE_SCAN_FOR_DEVICES = 0;
@@ -76,10 +76,11 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     private String mBtDeviceAddress = "";
 
     private boolean mEndNodeRequiresLogin = true;
+    private int mRequestCode = 0;
 
     private MenuItem mCurrentMenuItem;
     private MaterialDialog mDialog;
-    private LinkedHashMap<Integer, OnRoomWidgetDataReceivedListener> mWidgetDataReceivedCallbacks = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, OnRoomConfigurationReceivedListener> mWidgetDataReceivedCallbacks = new LinkedHashMap<>();
     private ArrayList<OnBtServiceStateChangedListener> mBtStateChangedCallbacks = new ArrayList<>();
     private LinkedHashMap<Integer, Room> mRooms;
 
@@ -177,7 +178,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
         if (mRooms != null && mRooms.containsKey(id)) {
             final Room room = mRooms.get(id);
-            final RoomControlFragment fragment = getNewRoomFragment(room.getRoomId(), room.getRoomWidgets());
+            final FragmentRoomWidgets fragment = getNewRoomFragment(room.getRoomId(), room.getRoomWidgets());
 
             getSupportFragmentManager()
                     .beginTransaction()
@@ -197,8 +198,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private RoomControlFragment getNewRoomFragment(int id, LinkedHashMap<Integer, RoomWidget> widgets) {
-        RoomControlFragment frag = new RoomControlFragment();
+    private FragmentRoomWidgets getNewRoomFragment(int id, LinkedHashMap<Integer, RoomWidget> widgets) {
+        FragmentRoomWidgets frag = new FragmentRoomWidgets();
         frag.setRoomWidgets(id, widgets);
         return frag;
     }
@@ -213,7 +214,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             InputStream is = getAssets().open("room_widget_sceme.xml");
 
             try {
-                widgets = new RoomWidgetParser().parse(is);
+                widgets = new RoomWidgetParser().parseRoomConfiguration(is);
             } catch (XmlPullParserException ignored) {}
             is.close();
         } catch (IOException ignored) {}
@@ -361,30 +362,36 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             parser.setInput(new StringReader(command));
             parser.nextTag();
 
-
         } catch(XmlPullParserException | IOException e) {
             Log.e("ActivityMain", e.getMessage());
             return;
         }
 
         try {
-            LinkedHashMap<Integer, Room> l = new RoomWidgetParser().parse(command);
-            setData(l);
+            LinkedHashMap<Integer, Room> l = new RoomWidgetParser().parseRoomConfiguration(command);
+            setRoomConfiguration(l);
             return;
-        } catch (XmlPullParserException | IOException e) {
-            Log.e("ActivityMain", e.getMessage());
-        }
+        } catch (XmlPullParserException | IOException ignored) {}
+
+        try {
+            LinkedHashMap<Integer, Room> l = new RoomWidgetParser().parseRoomConfigurationUpdate(command);
+            updateRoomConfiguration(l);
+            Snackbar.make(findViewById(android.R.id.content), "Data updated", Snackbar.LENGTH_LONG).show();
+            return;
+        } catch (XmlPullParserException | IOException ignored) {}
+
         try {
             parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_UNKNOWN);
             Snackbar.make(findViewById(android.R.id.content), "Unknown command", Snackbar.LENGTH_LONG).show();
             /* Restore previous state */
-            setData(mRooms);
+            setRoomConfiguration(mRooms);
             return;
-        } catch (XmlPullParserException | IOException e) { }
+        } catch (XmlPullParserException | IOException ignored) { }
 
         try {
             parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_OK);
-            Snackbar.make(findViewById(android.R.id.content), "Command OK", Snackbar.LENGTH_LONG).show();
+            int requestCode = Integer.valueOf(parser.getAttributeValue(RoomWidgetWriter.namespace, Constants.XML_ATTRIBUTE_REQUEST_CODE));
+            Snackbar.make(findViewById(android.R.id.content), "Command OK request code: " + requestCode, Snackbar.LENGTH_LONG).show();
             return;
         } catch (XmlPullParserException | IOException ignored) {}
 
@@ -392,7 +399,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             parser.require(XmlPullParser.START_TAG, null, Constants.XML_TAG_RESPONSE_COMMAND_INTERNAL_ERROR);
             Snackbar.make(findViewById(android.R.id.content), "Internal error", Snackbar.LENGTH_LONG).show();
             /* Restore previous state */
-            setData(mRooms);
+            setRoomConfiguration(mRooms);
         } catch (XmlPullParserException | IOException ignored) {}
 
     }
@@ -400,12 +407,12 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     /* Set RoomConfiguration data. This function inflates navigation drawers
      * list with a room names and notifies fragments that are listening for data changes
      */
-    private void setData(LinkedHashMap<Integer, Room> widgets) {
+    private void setRoomConfiguration(LinkedHashMap<Integer, Room> widgets) {
 
         if(widgets != null) {
             mRooms = widgets;
             /* Notify fragments that data is received */
-            notifyWidgetDataReceivedCallbacks(widgets);
+            notifyCallbacksRoomConfigurationReceived(widgets);
             int order = 0;
             Menu menu = mNavigationView.getMenu().findItem(R.id.nav_group_rooms).getSubMenu();
 
@@ -436,8 +443,26 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /* Update RoomConfiguration data. This function inflates navigation drawers
+     * list with a room names and notifies fragments that are listening for data changes
+     */
+    private void updateRoomConfiguration(LinkedHashMap<Integer, Room> widgets) {
+        if(widgets != null && mRooms != null) {
+            for(Map.Entry<Integer, Room>  room : widgets.entrySet()) {
+                int key = room.getKey();
+                Room roomToUpdate = mRooms.get(key);
+                Room roomUpdate = room.getValue();
 
-    public void registerOnRoomWidgetDataReceivedListener(int roomId, OnRoomWidgetDataReceivedListener l) {
+                if(roomToUpdate != null && roomUpdate != null) {
+                    roomToUpdate.updateRoomData(roomUpdate);
+                }
+            }
+            notifyCallbacksRoomConfigurationUpdated(mRooms);
+        }
+    }
+
+
+    public void registerOnRoomWidgetDataReceivedListener(int roomId, OnRoomConfigurationReceivedListener l) {
         if(mWidgetDataReceivedCallbacks != null) {
             mWidgetDataReceivedCallbacks.put(roomId, l);
         }
@@ -461,18 +486,24 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /* Notify callbacks that are registered for a widget state changes. This
-     * function is called when new data is received from a micro controller.
-     */
-    public void notifyWidgetDataReceivedCallbacks(LinkedHashMap<Integer, Room> data) {
-
+    /* Notify callbacks that RoomConfiguration is received */
+    public void notifyCallbacksRoomConfigurationReceived(LinkedHashMap<Integer, Room> data) {
         for(Room room : data.values()) {
-            OnRoomWidgetDataReceivedListener callback = mWidgetDataReceivedCallbacks.get(room.getRoomId());
+            OnRoomConfigurationReceivedListener callback = mWidgetDataReceivedCallbacks.get(room.getRoomId());
             if(callback != null) {
-                callback.onRoomWidgetDataReceived(room);
+                callback.onRoomConfigurationReceived(room);
             }
         }
+    }
 
+    /* Notify callbacks that RoomConfiguration is updated */
+    public void notifyCallbacksRoomConfigurationUpdated(LinkedHashMap<Integer, Room> data) {
+        for(Room room : data.values()) {
+            OnRoomConfigurationReceivedListener callback = mWidgetDataReceivedCallbacks.get(room.getRoomId());
+            if(callback != null) {
+                callback.onRoomConfigurationUpdated();
+            }
+        }
     }
 
     /* Notify callbacks that are listening for a bluetooth connection
@@ -492,17 +523,19 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     public void commitRoomDataChanges(int roomId, RoomWidget widget) {
 
         if(mBtService != null && mBtService.getState() == Constants.STATE_CONNECTED) {
-            byte data[] = new RoomWidgetWriter().writeXml(roomId, widget);
-            try {
-                Log.i("ActivityMain", (new String(data, "UTF-8")));
-            } catch (UnsupportedEncodingException ignored) {}
+            /* Increase request code by 1. If we don't receive response with this
+               request code, then we try to reload RoomConfiguration
+             */
+            mRequestCode++;
 
+            byte data[] = new RoomWidgetWriter().writeXml(roomId, mRequestCode, widget);
+            Log.i("ActivityMain", "ActivityMain: " + new String(data));
             mBtService.write(data);
         } else {
             /* Not connected to the micro controller. Show error and restore
              * widget previous state */
             showNotConnectedError();
-            setData(mRooms);
+            setRoomConfiguration(mRooms);
         }
     }
 

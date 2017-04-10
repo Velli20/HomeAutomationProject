@@ -1,13 +1,11 @@
 /* Includes */
 #include "DIALOG.h"
 #include "main.h"
-#include "BITMAPS.h"
+#include "UI_resources.h"
 #include "SWIPELIST.h"
 #include <stdio.h>
 #include "WM.h"
 
-/* Funtion prototypes */
-WM_HWIN Settings_CreateSettingsWindow(void);
 
 /* Defines */
 #define ID_WINDOW_SETTINGS_MENU  (GUI_ID_USER + 0x00)
@@ -15,35 +13,44 @@ WM_HWIN Settings_CreateSettingsWindow(void);
 #define ID_TEXT_SETTINGS_MENU_RETURN  (GUI_ID_USER + 0x010)
 #define ID_SETTINGS_MENU_SWIPE_LIST  (GUI_ID_USER + 0x03)
 
-#define WINDOW_SETTINGS_WINDOW_TITLE 			"Asetukset"
+/* Private function prototypes */
+static void Settings_InitMenuItems(WM_HWIN hItem);
+static void Settings_DialogCallback(WM_MESSAGE * pMsg);
 
 /* Static data */
 static WM_HWIN hThisWindow;
 
-const char months_FIN[12][15] = {"Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu",
-		"Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"};
+
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_SETTINGS_MENU, 1, 0, 480, 272, 0, 0x0, 0 },
-		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_SETTINGS_MENU_RETURN, 10, 10, 48, 48, 0, 0, 0 },
-		{ TEXT_CreateIndirect, WINDOW_SETTINGS_WINDOW_TITLE, ID_TEXT_SETTINGS_MENU_RETURN, 65, 24, 80, 20, 0, 0x0, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_SETTINGS_MENU_RETURN, 10, 5, 48, 48, 0, 0, 0 },
+		{ TEXT_CreateIndirect, SETTINGS_WINDOW_TITLE, ID_TEXT_SETTINGS_MENU_RETURN, 65, 20, 80, 20, 0, 0x0, 0 },
 		{ SWIPELIST_CreateIndirect, NULL, ID_SETTINGS_MENU_SWIPE_LIST, 0, 58, 480, 214, 0, 0x0, 0 },};
 
 /* Private code */
 
+/**
+ * @brief  Inflate SWIPELIST widget with menu items
+ * @param  hItem: Handle of SwipeList widget
+ * @retval None
+ */
 static void Settings_InitMenuItems(WM_HWIN hItem) {
 
-	SWIPELIST_AddItem(hItem, "Päivämäärä", 48);
-	SWIPELIST_SetBitmap(hItem, 0, SWIPELIST_BA_LEFT, &bmBITMAP_calendar);
-	SWIPELIST_AddItem(hItem, "Aika", 48);
-	SWIPELIST_SetBitmap(hItem, 1, SWIPELIST_BA_LEFT, &bmBITMAP_clock);
-	SWIPELIST_AddItem(hItem, "WiFi", 48);
-	SWIPELIST_AddItem(hItem, "Bluetooth", 48);
-	SWIPELIST_AddItem(hItem, "Ethernet", 48);
-	SWIPELIST_AddItem(hItem, "Huone konfiguraatio", 48);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_DATE, SETTINGS_LIST_ITEM_HEIGHT);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_TIME, SETTINGS_LIST_ITEM_HEIGHT);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_WIFI, SETTINGS_LIST_ITEM_HEIGHT);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_BLUETOOTH, SETTINGS_LIST_ITEM_HEIGHT);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_ETHERNET, SETTINGS_LIST_ITEM_HEIGHT);
+	SWIPELIST_AddItem(hItem, SETTINGS_MENU_ITEM_ROOM_CONFIGURATION, SETTINGS_LIST_ITEM_HEIGHT);
 }
 
-static void _cbDialog(WM_MESSAGE * pMsg) {
+/**
+ * @brief  Handle callback events from parent window
+ * @param  pMsg: callback message structure from parent window
+ * @retval None
+ */
+static void Settings_DialogCallback(WM_MESSAGE * pMsg) {
 	WM_HWIN hItem;
 	int NCode;
 	int Id;
@@ -58,7 +65,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		/* Initialization of title */
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_SETTINGS_MENU_RETURN);
 		TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, WINDOW_TITLE_FONT);
 
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_SETTINGS_MENU_SWIPE_LIST);
 
@@ -82,8 +89,6 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 		case ID_IMAGE_VIEW_SETTINGS_MENU_RETURN:
 			switch (NCode) {
-			case WM_NOTIFICATION_CLICKED:
-				break;
 			case WM_NOTIFICATION_RELEASED:
 				WM_HideWindow(hThisWindow);
 				break;
@@ -93,11 +98,18 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 			switch (NCode) {
 			case WM_NOTIFICATION_RELEASED:
 				selection = SWIPELIST_GetReleasedItem(WM_GetDialogItem(pMsg->hWin, ID_SETTINGS_MENU_SWIPE_LIST));
-				if(selection == 1) {
+				switch(selection) {
+				case 0:
+					WM_ShowWindow(SettingsDate_CreateSettingsDateWindow());
+					break;
+				case 1:
 					WM_ShowWindow(SettingsTime_CreateSettingsTimeWindow());
-				} else if(selection == 5) {
+					break;
+				case 5:
 					WM_ShowWindow(WindowRoomConfiguration_CreateWindow());
+					break;
 				}
+
 				break;
 			}
 			break;
@@ -112,8 +124,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 /* Public code */
 
+/**
+  * @brief Create settings window
+  * @param None
+  * @retval Handle pointing to settings window
+  */
 WM_HWIN Settings_CreateSettingsWindow(void) {
-	hThisWindow = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+	hThisWindow = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), Settings_DialogCallback, WM_HBKWIN, 0, 0);
 	return hThisWindow;
 }
 

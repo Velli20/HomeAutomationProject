@@ -46,34 +46,42 @@ public class RoomWidgetParser {
     private static final String Tag = "RoomWidgetParser ";
     private static final String nameSpace = null;
 
-    public LinkedHashMap<Integer, Room> parse(String xmlString) throws XmlPullParserException, IOException {
-        Log.i(Tag, Tag + String.format("parse(%s)", xmlString));
+    public LinkedHashMap<Integer, Room> parseRoomConfiguration(String xmlString) throws XmlPullParserException, IOException {
 
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(new StringReader(xmlString));
             parser.nextTag();
 
-            return readData(parser);
+            return readRoomConfiguration(parser);
     }
 
-    public LinkedHashMap<Integer, Room> parse(InputStream in) throws XmlPullParserException, IOException {
-        Log.i(Tag, Tag + "parse()");
+    public LinkedHashMap<Integer, Room> parseRoomConfiguration(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
 
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
-            return readData(parser);
+            return readRoomConfiguration(parser);
         } finally {
             in.close();
         }
     }
 
-    private LinkedHashMap<Integer, Room> readData(XmlPullParser parser) throws XmlPullParserException, IOException {
+    public LinkedHashMap<Integer, Room> parseRoomConfigurationUpdate(String xmlString) throws XmlPullParserException, IOException {
+
+        XmlPullParser parser = Xml.newPullParser();
+        parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+        parser.setInput(new StringReader(xmlString));
+        parser.nextTag();
+
+        return readRoomConfigurationUpdate(parser);
+    }
+
+    private LinkedHashMap<Integer, Room> readRoomConfiguration(XmlPullParser parser) throws XmlPullParserException, IOException {
         LinkedHashMap<Integer, Room> entries = new LinkedHashMap<>();
-        parser.require(XmlPullParser.START_TAG, nameSpace, "Data");
+        parser.require(XmlPullParser.START_TAG, nameSpace, Constants.XML_TAG_ROOM_CONFIGURATION);
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -82,9 +90,32 @@ public class RoomWidgetParser {
             String tag = parser.getName();
 
             Log.i(Tag, Tag + "readRoom() tag: " + tag);
-            if(tag.equals("Room")) {
-                String roomName = parser.getAttributeValue(nameSpace, "name");
-                int id = Integer.parseInt(parser.getAttributeValue(nameSpace, "id"));
+            if(tag.equals(Constants.XML_TAG_ROOM)) {
+                String roomName = parser.getAttributeValue(nameSpace, Constants.XML_TAG_NAME);
+                int id = Integer.parseInt(parser.getAttributeValue(nameSpace, Constants.XML_TAG_ID));
+
+                LinkedHashMap<Integer, RoomWidget> w = readRoom(parser);
+                entries.put(id, new Room(id, roomName, w));
+            } else {
+                skip(parser);
+            }
+        }
+        return entries;
+    }
+
+    private LinkedHashMap<Integer, Room> readRoomConfigurationUpdate(XmlPullParser parser) throws XmlPullParserException, IOException {
+        LinkedHashMap<Integer, Room> entries = new LinkedHashMap<>();
+        parser.require(XmlPullParser.START_TAG, nameSpace, Constants.XML_TAG_ROOM_CONFIGURATION_UPDATE);
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String tag = parser.getName();
+
+            if(tag.equals(Constants.XML_TAG_ROOM)) {
+                String roomName = parser.getAttributeValue(nameSpace, Constants.XML_TAG_NAME);
+                int id = Integer.parseInt(parser.getAttributeValue(nameSpace, Constants.XML_TAG_ID));
 
                 LinkedHashMap<Integer, RoomWidget> w = readRoom(parser);
                 entries.put(id, new Room(id, roomName, w));
@@ -99,7 +130,7 @@ public class RoomWidgetParser {
         Log.i(Tag, Tag + "readRoom()");
         LinkedHashMap<Integer, RoomWidget> entries = new LinkedHashMap<>();
 
-        parser.require(XmlPullParser.START_TAG, nameSpace, "Room");
+        parser.require(XmlPullParser.START_TAG, nameSpace, Constants.XML_TAG_ROOM);
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -107,7 +138,7 @@ public class RoomWidgetParser {
             String name = parser.getName();
 
             Log.i(Tag, Tag + "readRoom() tag: " + name);
-            if(name.equals("RoomWidget")) {
+            if(name.equals(Constants.XML_TAG_WIDGET)) {
                 RoomWidget w = readWidget(parser);
                 entries.put(w.mId, w);
             } else {
@@ -118,7 +149,7 @@ public class RoomWidgetParser {
     }
 
     private RoomWidget readWidget (XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, nameSpace, "RoomWidget");
+        parser.require(XmlPullParser.START_TAG, nameSpace, Constants.XML_TAG_WIDGET);
         RoomWidget widget = new RoomWidget();
 
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -127,18 +158,20 @@ public class RoomWidgetParser {
             }
             String name = parser.getName();
 
-            if (name.equals("id")) {
-                widget.mId = readInt(parser, "id");
-            } else if(name.equals("type")) {
-                widget.mType = readInt(parser, "type");
-            } else if(name.equals("name")) {
-                widget.mName = readString(parser, "name");
-            } else if(name.equals("intValue")) {
-                widget.mIntValue = readInt(parser, "intValue");
-            } else if(name.equals("boolValue")) {
-                widget.mBoolValue = readBool(parser, "boolValue");
-            } else if(name.equals("status")) {
-                widget.mStatus = readInt(parser, "status");
+            if (name.equals(Constants.XML_TAG_ID)) {
+                widget.mId = readInt(parser, Constants.XML_TAG_ID);
+            } else if(name.equals(Constants.XML_TAG_TYPE)) {
+                widget.mType = readInt(parser, Constants.XML_TAG_TYPE);
+            } else if(name.equals(Constants.XML_TAG_NAME)) {
+                widget.mName = readString(parser, Constants.XML_TAG_NAME);
+            } else if(name.equals(Constants.XML_TAG_INT_VALUE)) {
+                widget.mIntValue = readInt(parser, Constants.XML_TAG_INT_VALUE);
+            } else if(name.equals(Constants.XML_TAG_BOOL_VALUE)) {
+                widget.mBoolValue = readBool(parser, Constants.XML_TAG_BOOL_VALUE);
+            } else if(name.equals(Constants.XML_TAG_STATUS)) {
+                widget.mStatus = readInt(parser, Constants.XML_TAG_STATUS);
+            } else if(name.equals(Constants.XML_TAG_INT_TARGET_VALUE)) {
+                widget.mIntTargetValue = readInt(parser, Constants.XML_TAG_INT_TARGET_VALUE);
             } else {
                 skip(parser);
             }

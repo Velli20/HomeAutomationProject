@@ -3,10 +3,12 @@
 
 /* Includes */
 #include "ezxml.h"
+#include <string.h>
 
 /* XML tags used to represent commands */
 #define TAG_MESSAGE_GET_ROOM_GONFIGURATION 		"GetRoomConfiguration"
-#define TAG_MESSAGE_UPDATE_WIDGET_STATUS		"Data"
+#define TAG_MESSAGE_UPDATE_WIDGET_STATUS		"RoomConfigurationUpdate"
+
 
 
 typedef enum {

@@ -1,4 +1,5 @@
 #include "RoomConfiguration.h"
+#include "UI_resources.h"
 
 /* Private variables */
 static FATFS SDFatFs;              /* File system object for SD card logical drive */
@@ -61,13 +62,13 @@ ROOM_CONFIGURATION_READ_RESULT RoomConfiguration_ReadFromSdCard(void) {
 	}
 
 	/* Get byte count of the configuration file */
-	size_t configFileSize = f_size(&RoomConfigurationFile) - 1;
+	size_t configFileSize = f_size(&RoomConfigurationFile);
 	if (configFileSize == 0) {
 		res = ROOM_CONFIGURATION_RESULT_CONFIGURATION_FILE_EMPTY;
 		goto end;
 	}
 
-	/* Allocate memory for the config string */
+	/* Allocate memory for the configuration string */
 	char * configFileString = calloc(configFileSize, sizeof(char));
 
 	if (configFileString) {
@@ -77,10 +78,10 @@ ROOM_CONFIGURATION_READ_RESULT RoomConfiguration_ReadFromSdCard(void) {
 		if (read != FR_OK || bytesread < configFileSize) {
 			/* Set error if read byte count is less than size of file we are reading */
 			res = ROOM_CONFIGURATION_RESULT_UNABLE_TO_READ_FILE;
-			free(configFileString);
 			goto end;
 		}
-
+		/* Null terminate file string */
+		configFileString[configFileSize-1] = '\0';
 
 		/* Parse the room configuration file */
 		roomConfiguration = RoomWidgetParser_ParseString(configFileString, bytesread);
@@ -93,8 +94,6 @@ ROOM_CONFIGURATION_READ_RESULT RoomConfiguration_ReadFromSdCard(void) {
 				onRoomConfigurationChangedCallback(ROOM_CONFIGURATION_CREATED);
 			}
 		}
-
-		free(configFileString);
 	} else {
 		res = ROOM_CONFIGURATION_RESULT_NO_MEMORY;
 	}
@@ -105,6 +104,9 @@ ROOM_CONFIGURATION_READ_RESULT RoomConfiguration_ReadFromSdCard(void) {
 	/* Unlink the micro SD disk I/O driver and close file*/
 	f_close(&RoomConfigurationFile);
 	FATFS_UnLinkDriver(SDPath);
+	if(configFileString) {
+		free(configFileString);
+	}
 
 	return res;
 }
@@ -116,9 +118,10 @@ ROOM_CONFIGURATION_READ_RESULT RoomConfiguration_ReadFromSdCard(void) {
  */
 int RoomConfiguration_UpdateRoomState(const ezxml_t a_node) {
 	int result = ROOM_UPDATE_RESULT_ERROR;
-	if(!a_node) {
+	if(!a_node || !roomConfiguration) {
 		return result;
 	}
+
 
 	/* Try to parse data in XML node */
 	struct RoomList* roomConfigurationUpdate = RoomWidgetParser_ParseData(a_node);
@@ -128,38 +131,44 @@ int RoomConfiguration_UpdateRoomState(const ezxml_t a_node) {
 		/* Iterate trough RoomWidgets in roomConfigurationUpdate list */
 		while (ptrRoom) {
 
-			if (ptrRoom->widgets) {
+			if (ptrRoom->widgets && ptrRoom->widgets->head) {
 				struct RoomWidget* ptrWidget = ptrRoom->widgets->head;
+
 				while (ptrWidget) {
 					/* Try to get a widget that matches id */
 					struct RoomWidget * ptrWidgetToUpdate = RoomWidget_GetRoomWidgetWithId(roomConfiguration, ptrWidget->id);
 
 					if(ptrWidgetToUpdate) {
+						if(ptrWidgetToUpdate->type != WIDGET_TYPE_THERMOSTAT) {
+							/* Avoid overwriting read only values */
+							ptrWidgetToUpdate->intValue = ptrWidget->intValue;
+
+							if(ptrWidget->intValueTarget < MAX_THERMOSTAT_TEMPERATURE
+									&& ptrWidget->intValueTarget > MIN_THERMOSTAT_TEMPERATURE) {
+								ptrWidgetToUpdate->intValueTarget = ptrWidget->intValueTarget;
+							} else {
+								/* Target value is out of range */
+								return ROOM_UPDATE_RESULT_ERROR;
+							}
+						}
 						/* Update values in current RoomConfiguration */
 						ptrWidgetToUpdate->boolValue = ptrWidget->boolValue;
-						ptrWidgetToUpdate->intValue = ptrWidget->intValue;
 						ptrWidgetToUpdate->status = ptrWidget->status;
+
 
 						result = ROOM_UPDATE_RESULT_OK;
 
+						/* Notify callbacks */
+						RoomConfiguration_NotifyWidgetUpdated(ptrWidgetToUpdate, RC_WIDGET_UPDATED_FROM_REMOTE);
 					}
 					ptrWidget = ptrWidget->next;
 				}
 			}
 			ptrRoom = ptrRoom->next;
 		}
-		if (result == ROOM_UPDATE_RESULT_OK) {
-			/* Notify callbacks that RoomConfiguration was changed */
-			if (onWidgetStateChangedCallback) {
-				onWidgetStateChangedCallback(NULL);
-
-			}
-			if (onRoomConfigurationChangedCallback) {
-				onRoomConfigurationChangedCallback(ROOM_CONFIGURATION_UPDATED);
-			}
-		}
 		/* Free allocated memory*/
 		RoomWidget_FreeRoomList(roomConfigurationUpdate);
+
 
 	}
 	return result;
@@ -206,6 +215,15 @@ struct RoomWidget ** RoomConfiguration_GetPointerArrayForWidgetType(const int wi
 		headPointer = headPointer->next;
 	}
 	return pp;
+}
+
+/**
+ * @brief  Get current instance of RoomConfiguration
+ * @param  None
+ * @retval Pointer to RoomList structure
+ */
+struct RoomList * RoomConfiguration_GetRoomConfiguration() {
+	return roomConfiguration;
 }
 
 /**
@@ -280,17 +298,16 @@ char * RoomConfiguration_GetRoomConfiguartionInXmlFormat(void) {
 		char * xml = ezxml_toxml(node);
 
 		if(xml) {
-			char * copy = calloc(strlen(xml) +1, sizeof(char));
+			char * copy = calloc(strlen(xml) + 3, sizeof(char));
 			if(copy) {
-				sprintf(copy, "%s\r", xml);
+				sprintf(copy, "%c%s%c", SERIAL_START_FLAG, xml, SERIAL_END_FLAG);
+				ezxml_free(node);
+				free(xml);
+				return copy;
 			}
-			ezxml_free(node);
 			free(xml);
-			return copy;
 		}
 		ezxml_free(node);
-
-		return NULL;
 	}
 	return NULL;
 }
@@ -312,4 +329,54 @@ void RoomConfiguration_SetOnRoomConfigurationChangedCallback(OnRoomConfiguration
  */
 void RoomConfiguration_SetOnWidgetStateChangedCallback(OnWidgetStateChangedCallback c) {
 	onWidgetStateChangedCallback = c;
+}
+
+/**
+ * @brief  Notify UI and remote devices that one of the RoomWidgets has been updated
+ * @param  widget: Pointer to the widget that has been updated
+ * @retval None
+ */
+void RoomConfiguration_NotifyWidgetUpdated(struct RoomWidget * widget, int notificationCode) {
+	/* Notify callbacks that RoomConfiguration was changed */
+	if (onWidgetStateChangedCallback && widget) {
+		onWidgetStateChangedCallback(widget, notificationCode);
+
+		if(notificationCode != RC_WIDGET_UPDATED_FROM_REMOTE) {
+			/* Avoid loops by sending incoming data back to remote device */
+			RoomConfiguration_NotifyRemoteDeviceWidgetUpdated(widget);
+		}
+
+	}
+	if (onRoomConfigurationChangedCallback) {
+		onRoomConfigurationChangedCallback(ROOM_CONFIGURATION_UPDATED);
+	}
+}
+
+/**
+ * @brief  Notify remote devices that one of the RoomWidgets has been updated
+ * @param  widget: Pointer to the widget that has been updated
+ * @retval None
+ */
+void RoomConfiguration_NotifyRemoteDeviceWidgetUpdated(struct RoomWidget * widget) {
+	if (!widget || !roomConfiguration) {
+		return;
+	}
+
+	ezxml_t node = RoomWidgetWriter_GetRoomWidgetUpdateXML(roomConfiguration, widget);
+
+	if (node) {
+		char * xml = ezxml_toxml(node);
+		if (xml) {
+			char * copy = calloc(strlen(xml) + 2, sizeof(char));
+			if (copy) {
+				sprintf(copy, "%c%s%c", SERIAL_START_FLAG, xml,SERIAL_END_FLAG );
+				SerialCommandWriterReader_TxWriteMessage(copy, strlen(copy));
+				free(copy);
+			}
+
+
+		}
+		ezxml_free(node);
+		free(xml);
+	}
 }

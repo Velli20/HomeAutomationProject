@@ -1,7 +1,7 @@
 /* Includes */
 #include "DIALOG.h"
 #include "main.h"
-#include "BITMAPS.h"
+#include "UI_resources.h"
 
 /* Defines */
 #define ID_WINDOW_MENU  			(GUI_ID_USER + 0x00)
@@ -11,38 +11,27 @@
 #define ID_TEXT_DATE  				(GUI_ID_USER + 0x04)
 #define ID_TEXT_TEMPERATURE  		(GUI_ID_USER + 0x05)
 
-/* Private typedef */
-typedef struct {
-	const GUI_BITMAP * pBitmap;
-	const char * pText;
-} BITMAP_ITEM;
 
 /* Private function prototypes */
 static void Menu_SetMenuItemSelected(WM_HWIN hItem, int selected);
+static void Menu_DialogCallback(WM_MESSAGE * pMsg);
 
-/* Function prototypes */
-WM_HWIN Menu_CreateMenuWindow(void);
 
-void Menu_StatusBarUpdateDateTime(void);
-void Menu_StatusBarUpdateSdCardIcon(void);
-void Menu_StatusBarUpdateTemperatureReading(void);
 
 /* Static data */
-static const BITMAP_ITEM mBitmaps[] = { { &bmBITMAP_lights, "Valaistus" }, {
-		&bmBITMAP_temperature, "Lämpötila" }, { &bmBITMAP_console, "Komennot" },
-		{ &bmBITMAP_settings, "Asetukset" }, };
-
-static const BITMAP_ITEM mBitmapsSelected[] = { { &bmBITMAP_lights_selected, "Valaistus" }, {
-		&bmBITMAP_temperature_selected, "Lämpötila" }, { &bmBITMAP_console_selected, "Komennot" },
-		{ &bmBITMAP_settings_selected, "Asetukset" }, };
+static const BITMAP_ITEM mBitmaps[] = {
+		{ &bmBITMAP_lights, &bmBITMAP_lights_selected, WINDOW_MENU_MENU_ITEM_LIGHTS },
+		{ &bmBITMAP_temperature, &bmBITMAP_temperature_selected, WINDOW_MENU_MENU_ITEM_TMEPERATURE },
+		{ &bmBITMAP_console, &bmBITMAP_console_selected, WINDOW_MENU_MENU_ITEM_COMMANDS },
+		{ &bmBITMAP_settings, &bmBITMAP_settings_selected, WINDOW_MENU_MENU_ITEM_SETTINGS }, };
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-		{ WINDOW_CreateIndirect, "Window", ID_WINDOW_MENU, 0, 0, 480, 272, 0, 0x0, 0 },
-		{ ICONVIEW_CreateIndirect, "Iconview", ID_ICONVIEW_MENU, 0, 20, 480, 272, 0, 0x00600060, 0 },
-		{ IMAGE_CreateIndirect, "Image", ID_STATUS_BAR_ICON_SD_CARD, 63, 0, 26, 27, 0, 0, 0 },
-		{ TEXT_CreateIndirect, "", ID_TEXT_TIME, 400, 0, 80, 20, 0, 0x0, 0 },
-		{ TEXT_CreateIndirect, "", ID_TEXT_DATE, 320, 0, 80, 20, 0, 0x0, 0 },
-		{ TEXT_CreateIndirect, "- °C", ID_TEXT_TEMPERATURE, 0, 0, 80, 20, 0, 0x0, 0 },};
+		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_MENU, 0, 0, 480, 272, 0, 0x0, 0 },
+		{ ICONVIEW_CreateIndirect, NULL, ID_ICONVIEW_MENU, 0, 20, 480, 272, 0, 0x00600060, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_STATUS_BAR_ICON_SD_CARD, 63, 0, 26, 27, 0, 0, 0 },
+		{ TEXT_CreateIndirect, NULL, ID_TEXT_TIME, 400, 0, 80, 20, 0, 0x0, 0 },
+		{ TEXT_CreateIndirect, NULL, ID_TEXT_DATE, 320, 0, 80, 20, 0, 0x0, 0 },
+		{ TEXT_CreateIndirect, TEMPERATURE_UNIT, ID_TEXT_TEMPERATURE, 0, 0, 80, 20, 0, 0x0, 0 },};
 
 
 /* Variables */
@@ -54,7 +43,12 @@ extern uint8_t temperatureReading;
 
 /* Private code */
 
-static void _cbDialog(WM_MESSAGE * pMsg) {
+/**
+ * @brief  Handle callback events from parent window
+ * @param  pMsg: callback message structure from parent window
+ * @retval None
+ */
+static void Menu_DialogCallback(WM_MESSAGE * pMsg) {
 	int NCode;
 	int Id;
 	int selection;
@@ -78,19 +72,19 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_TIME);
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, MENU_WINDOW_TIME_TEXT_FONT);
 
 		/* Initialization of status bar date text */
 
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_DATE);
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, MENU_WINDOW_DATE_TEXT_FONT);
 
 		/* Initialization of status bar temperature text */
 
 
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_TEMPERATURE);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, MENU_WINDOW_TEMPERATURE_TEXT_FONT);
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
 		Menu_StatusBarUpdateTemperatureReading();
 
@@ -100,12 +94,12 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_ICONVIEW_MENU);
 		ICONVIEW_SetSpace(hItem, GUI_COORD_X, 24);
 		ICONVIEW_SetSpace(hItem, GUI_COORD_Y, 10);
-		ICONVIEW_SetFont(hItem, GUI_FONT_13B_1);
+		ICONVIEW_SetFont(hItem, MENU_WINDOW_MENU_ITEM_TEXT_FONT);
 		ICONVIEW_SetSel(hItem, -1);
 
 		int i;
 		for (i = 0; i < GUI_COUNTOF(mBitmaps); i++) {
-			ICONVIEW_AddBitmapItem(hItem, mBitmaps[i].pBitmap,mBitmaps[i].pText);
+			ICONVIEW_AddBitmapItem(hItem, mBitmaps[i].pBitmap, mBitmaps[i].pText);
 			ICONVIEW_SetTextColor(hItem, i, 0x000000);
 		}
 		break;
@@ -134,19 +128,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 					WM_ShowWindow(Temperature_CreateTemperatureWindow());
 					break;
 				case 2:
-					WM_ShowWindow(Commands_CreateCommandsWindow());
 					break;
 				case 3:
 					WM_ShowWindow(Settings_CreateSettingsWindow());
 					break;
 				}
 				break;
-			case WM_NOTIFICATION_MOVED_OUT:
-				break;
-			case WM_NOTIFICATION_SCROLL_CHANGED:
-				break;
-			case WM_NOTIFICATION_SEL_CHANGED:
-				break;
+
 			}
 			break;
 		}
@@ -159,7 +147,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 }
 
 /**
- * @brief  Change menu item
+ * @brief  Change bitmap of the selected menu item to show selection
  * @param  hItem: Handle of ICONVIEW widget
  * @param  selected: 1 if item is clicked or 0 if item is released
  */
@@ -174,12 +162,10 @@ static void Menu_SetMenuItemSelected(WM_HWIN hItem, int selected) {
 	}
 
 	if(selected) {
-		ICONVIEW_SetBitmapItem(hItem, selection, mBitmapsSelected[selection].pBitmap);
+		ICONVIEW_SetBitmapItem(hItem, selection, mBitmaps[selection].pBitmapSelected);
 	} else {
 		ICONVIEW_SetBitmapItem(hItem, selection, mBitmaps[selection].pBitmap);
 	}
-
-
 }
 
 
@@ -188,13 +174,13 @@ static void Menu_SetMenuItemSelected(WM_HWIN hItem, int selected) {
 
 
 /**
-  * @brief Createand show menu window
+  * @brief Create menu window
   * @param None
-  * @retval WM_HWIN: Handle pointing to menu window
+  * @retval Handle pointing to menu window
   */
 WM_HWIN Menu_CreateMenuWindow(void) {
 
-	hThisWindow = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+	hThisWindow = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), Menu_DialogCallback, WM_HBKWIN, 0, 0);
 	return hThisWindow;
 }
 
@@ -209,7 +195,7 @@ void Menu_StatusBarUpdateDateTime() {
 		return;
 	}
 	int up = 0;
-	uint8_t aShowTime[20];
+	uint8_t timeText[20];
 
 	RTC_TimeTypeDef stimestructureget;
 	RTC_DateTypeDef sdatestructureget;
@@ -223,16 +209,16 @@ void Menu_StatusBarUpdateDateTime() {
 
 	Menu_StatusBarUpdateTemperatureReading();
 
-	if (hTime && hDate && aShowTime) {
+	if (hTime && hDate && timeText) {
 		up = (stimestructureget.Seconds % 2 == 0? 1 : 0);
-		sprintf(aShowTime, (up ? "%02d:%02d:%02d" : "%02d %02d %02d"),
+		sprintf(timeText, (up ? "%02d:%02d:%02d" : "%02d %02d %02d"),
 				stimestructureget.Hours, stimestructureget.Minutes,
 				stimestructureget.Seconds);
-		TEXT_SetText(hTime, aShowTime);
+		TEXT_SetText(hTime, timeText);
 
-		sprintf(aShowTime, "%d/%d/%d", sdatestructureget.Date,
+		sprintf(timeText, "%d/%d/%d", sdatestructureget.Date,
 				sdatestructureget.Month, sdatestructureget.Year + 2000);
-		TEXT_SetText(hDate, aShowTime);
+		TEXT_SetText(hDate, timeText);
 	}
 }
 
@@ -265,7 +251,7 @@ void Menu_StatusBarUpdateTemperatureReading() {
 		return;
 	}
 	char tempText[10];
-	sprintf(tempText, "%d °C", temperatureReading);
+	sprintf(tempText, "%d %s", temperatureReading, TEMPERATURE_UNIT);
 
 	WM_HWIN hItem = WM_GetDialogItem(hThisWindow, ID_TEXT_TEMPERATURE);
 	TEXT_SetText(hItem, tempText);

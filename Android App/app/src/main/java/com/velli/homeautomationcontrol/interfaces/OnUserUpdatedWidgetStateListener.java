@@ -24,54 +24,11 @@
  *
  */
 
-package com.velli.homeautomationcontrol.collections;
+package com.velli.homeautomationcontrol.interfaces;
 
 
-public class RoomWidget {
-    public static int STATUS_UPDATES_PENDING = 0;
-    public static int STATUS_OK = 1;
-    public static int STATUS_FAILED= 2;
+import com.velli.homeautomationcontrol.collections.RoomWidget;
 
-    public int mType;
-    public int mId;
-    public int mStatus = STATUS_OK;
-
-    public String mName;
-    public boolean mBoolValue;
-    public int mIntValue;
-    public int mIntTargetValue;
-
-    public RoomWidget() {
-
-    }
-
-    public void setType(int type) {
-        mType = type;
-    }
-
-    public void setId(int id) {
-        mId = id;
-    }
-
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public void setIntValue(int value) {
-        mIntValue = value;
-    }
-
-    public void setInTargetValue(int targetValue) {
-        mIntTargetValue = targetValue;
-    }
-
-    public void updateValues(RoomWidget widget) {
-        this.mBoolValue = widget.mBoolValue;
-        this.mIntValue = widget.mIntValue;
-        this.mIntTargetValue = widget.mIntTargetValue;
-        this.mStatus = widget.mStatus;
-        this.mType = widget.mType;
-        this.mName = widget.mName;
-    }
-
+public interface OnUserUpdatedWidgetStateListener {
+    void onUserUpdatedWidgetState(RoomWidget widgetNewState);
 }

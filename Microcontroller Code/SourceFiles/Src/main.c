@@ -21,8 +21,6 @@ TIM_HandleTypeDef htim7;
 /* Variable to store latest reading of the temperature sensor */
 uint8_t temperatureReading = 0;
 
-/* LINKED_LIST declaration */
-struct LINKED_LIST UartCommands;
 
 
 /* Function prototypes */
@@ -55,8 +53,8 @@ int main(void) {
 	BSP_Init();
 	BSP_LED_Init(LED_GREEN);
 
-	/*  Configure Interrupt mode for SD detection pin
-     *  and enable and set SD detect EXTI Interrupt
+	/* Configure Interrupt mode for SD detection pin
+     * and enable and set SD detect EXTI Interrupt
      */
 	BSP_SD_ITConfig();
 

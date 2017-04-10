@@ -206,6 +206,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 	/* NVIC for USART, to catch the TX complete */
 	HAL_NVIC_SetPriority(USARTx_IRQn, 0, 2);
 	HAL_NVIC_EnableIRQ(USARTx_IRQn);
+
+
 }
 
 /**

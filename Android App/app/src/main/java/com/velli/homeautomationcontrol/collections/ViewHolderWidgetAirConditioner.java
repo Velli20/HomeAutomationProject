@@ -24,12 +24,33 @@
  *
  */
 
-package com.velli.homeautomationcontrol.interfaces;
+package com.velli.homeautomationcontrol.collections;
+
+import android.support.v7.widget.AppCompatSeekBar;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.CheckBox;
+
+import com.velli.homeautomationcontrol.R;
+import com.velli.homeautomationcontrol.views.RobotoLightTextView;
 
 
-import com.velli.homeautomationcontrol.collections.Room;
+public class ViewHolderWidgetAirConditioner extends RecyclerView.ViewHolder {
+    public RobotoLightTextView mTitle;
+    public RobotoLightTextView mTemperature;
+    public RobotoLightTextView mAirHumidity;
 
-public interface OnRoomWidgetDataReceivedListener {
+    public CheckBox mAuto;
+    public AppCompatSeekBar mSeekbar;
 
-    void onRoomWidgetDataReceived(Room room);
+    public ViewHolderWidgetAirConditioner(View itemView) {
+        super(itemView);
+
+        mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_cond_title);
+        mTemperature = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_cond_temp_text);
+        mAirHumidity = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_humidity_text);
+
+        mAuto = (CheckBox) itemView.findViewById(R.id.list_item_widget_air_cond_auto);
+        mSeekbar = (AppCompatSeekBar) itemView.findViewById(R.id.list_item_widget_air_cond_temp_bar);
+    }
 }

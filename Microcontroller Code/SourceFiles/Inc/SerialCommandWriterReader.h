@@ -1,7 +1,10 @@
-#include "main.h"
+
 
 #ifndef __SERIAL_COMMAND_READER_WRITER_H
 #define __SERIAL_COMMAND_READER_WRITER_H
+
+/* Includes */
+#include "main.h"
 
 /* Definition for USARTx clock resources */
 #define USARTx                           USART6
@@ -37,18 +40,26 @@
 #define USARTx_IRQHandler                 USART6_IRQHandler
 
 /* Size of Trasmission buffer */
-#define TXBUFFERSIZE                      1024
+#define TXBUFFERSIZE                      4096
 /* Size of Reception buffer */
 #define RXBUFFERSIZE                      TXBUFFERSIZE
+/* Transmission timeout */
+#define TX_TIMEOUT						  1000
 
 /* String formatter for serial command responses */
-#define TAG_RESPONSE_FORMATTER_STRING	  "<%s/>\r"
+#define TAG_RESPONSE_FORMATTER_STRING	 					"#<%s/>*"
+/* String formatter for serial command responses */
+#define TAG_RESPONSE_FORMATTER_STRING_WITH_REQUEST_CODE	  	"#<%s requestCode=\"%d\"/>*"
 /* Response that is used when we don't recoqnize the command that client device sent */
-#define TAG_RESPONSE_UNKNOWN_COMMAND	  "UnknownCommand"
+#define TAG_RESPONSE_UNKNOWN_COMMAND	  					"UnknownCommand"
 /* Response that is used to inform client device that command was successfull */
-#define TAG_RESPONSE_OK					  "OK"
+#define TAG_RESPONSE_OK					  					"OK"
 /* Response that is used when we have internal error (e.g programming error, out of memory etc.) */
-#define TAG_DEVICE_INTERNAL_ERROR		  "DeviceInternalError"
+#define TAG_DEVICE_INTERNAL_ERROR		  					"DeviceInternalError"
+/* Start character for serial communication */
+#define SERIAL_START_FLAG									'#'
+/* End character for serial communication */
+#define SERIAL_END_FLAG										'*'
 
 
 

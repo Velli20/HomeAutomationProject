@@ -12,6 +12,7 @@
 
 /* Public function prototypes */
 ezxml_t RoomWidgetWriter_WriteXML(struct RoomList * list);
+ezxml_t RoomWidgetWriter_GetRoomWidgetUpdateXML(struct RoomList * list, struct RoomWidget * widget);
 
 
 

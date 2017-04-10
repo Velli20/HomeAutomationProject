@@ -29,19 +29,18 @@ package com.velli.homeautomationcontrol.collections;
 import android.content.Context;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
-import com.velli.homeautomationcontrol.interfaces.OnRoomWidgetChangedListener;
+import com.velli.homeautomationcontrol.Constants;
+import com.velli.homeautomationcontrol.interfaces.OnUserUpdatedWidgetStateListener;
 import com.velli.homeautomationcontrol.views.RobotoLightTextView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import com.velli.homeautomationcontrol.R;
 
@@ -53,7 +52,7 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private LayoutInflater mInflater;
     private LinkedHashMap<Integer, RoomWidget> mWidgets;
-    private OnRoomWidgetChangedListener mListener;
+    private OnUserUpdatedWidgetStateListener mListener;
     private boolean mWidgetsEnabled = true;
 
     public RoomWidgetsAdapter(Context c,  LinkedHashMap<Integer, RoomWidget> widgets) {
@@ -61,7 +60,7 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mWidgets = widgets;
     }
 
-    public void setOnRoomWidgetChangedListener(OnRoomWidgetChangedListener l) {
+    public void setOnRoomWidgetChangedListener(OnUserUpdatedWidgetStateListener l) {
         mListener = l;
     }
 
@@ -85,42 +84,58 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(viewType == WIDGET_TYPE_LIGHTS) {
             return new ViewHolderWidgetLights(mInflater.inflate(R.layout.list_item_widget_lights, parent, false));
         } else if(viewType == WIDGET_TYPE_TEMPERATURE) {
-            return new ViewHolderWidgetTemperature(mInflater.inflate(R.layout.list_item_widget_temperature, parent, false));
+            return new ViewHolderWidgetThermostat(mInflater.inflate(R.layout.list_item_widget_temperature, parent, false));
         } else if(viewType == WIDGET_TYPE_AIR_CONDITIONER) {
             return new ViewHolderWidgetAirConditioner(mInflater.inflate(R.layout.list_item_widget_air_conditioner, parent, false));
         }
         return null;
     }
 
+    private String getCurrentTemperatureString(RoomWidget widget) {
+        return String.format(Locale.getDefault(), "%d C°", widget.mIntValue);
+    }
+
+    private String getTargetTemperatureString(RoomWidget widget) {
+        return getTargetTemperatureString(widget.mIntTargetValue);
+    }
+
+    private String getTargetTemperatureString(int value) {
+        return String.format(Locale.getDefault(), "/ %d C°", value);
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         RoomWidget widget = new ArrayList<>(mWidgets.values()).get(position);
-
+        WidgetListener listener = new WidgetListener(widget);
         if(widget.mType == WIDGET_TYPE_LIGHTS) {
-            WidgetListener listener = new WidgetListener(widget);
             ((ViewHolderWidgetLights)holder).itemView.setEnabled(mWidgetsEnabled);
             ((ViewHolderWidgetLights) holder).mTitle.setText(widget.mName);
-            ((ViewHolderWidgetLights)holder).mSwicth.setOnCheckedChangeListener(null);
-            ((ViewHolderWidgetLights)holder).mSwicth.setChecked(widget.mBoolValue);
-            ((ViewHolderWidgetLights)holder).mSwicth.setOnCheckedChangeListener(listener);
-            ((ViewHolderWidgetLights)holder).mSeekbar.setProgress(widget.mIntValue);
-            ((ViewHolderWidgetLights)holder).mSeekbar.setEnabled(widget.mBoolValue);
-            ((ViewHolderWidgetLights)holder).mSeekbar.setOnSeekBarChangeListener(listener);
+            ((ViewHolderWidgetLights)holder).mSwitch.setOnCheckedChangeListener(null);
+            ((ViewHolderWidgetLights)holder).mSwitch.setChecked(widget.mBoolValue);
+            ((ViewHolderWidgetLights)holder).mSwitch.setOnCheckedChangeListener(listener);
+            ((ViewHolderWidgetLights)holder).mSeekBar.setProgress(widget.mIntTargetValue);
+            ((ViewHolderWidgetLights)holder).mSeekBar.setEnabled(widget.mBoolValue);
+            ((ViewHolderWidgetLights)holder).mSeekBar.setOnSeekBarChangeListener(listener);
         } else if(widget.mType == WIDGET_TYPE_TEMPERATURE) {
-            ((ViewHolderWidgetTemperature)holder).itemView.setEnabled(mWidgetsEnabled);
-            ((ViewHolderWidgetTemperature)holder).mTitle.setText(widget.mName);
-            ((ViewHolderWidgetTemperature)holder).mTemperature.setText(String.valueOf(widget.mIntValue) + " C°");
+            listener.setTargetTemperatureText(((ViewHolderWidgetThermostat)holder).mTargetTemperature);
+            ((ViewHolderWidgetThermostat)holder).itemView.setEnabled(mWidgetsEnabled);
+            ((ViewHolderWidgetThermostat)holder).mTitle.setText(widget.mName);
+            ((ViewHolderWidgetThermostat)holder).mTemperature.setText(getCurrentTemperatureString(widget));
+            ((ViewHolderWidgetThermostat)holder).mTargetTemperature.setText(getTargetTemperatureString(widget));
+            ((ViewHolderWidgetThermostat)holder).mTargetTemperatureSeekBar.setProgress(widget.mIntTargetValue);
+            ((ViewHolderWidgetThermostat)holder).mTargetTemperatureSeekBar.setMax(Constants.MAX_TARGET_TEMPERATURE_CELSIUS);
+            ((ViewHolderWidgetThermostat)holder).mTargetTemperatureSeekBar.setOnSeekBarChangeListener(listener);
+
         } else if(widget.mType == WIDGET_TYPE_AIR_CONDITIONER) {
-            WidgetListener listener = new WidgetListener(widget);
             ((ViewHolderWidgetAirConditioner)holder).itemView.setEnabled(mWidgetsEnabled);
             ((ViewHolderWidgetAirConditioner)holder).mTitle.setText(widget.mName);
             ((ViewHolderWidgetAirConditioner)holder).mAuto.setOnCheckedChangeListener(null);
             ((ViewHolderWidgetAirConditioner)holder).mAuto.setChecked(widget.mBoolValue);
             ((ViewHolderWidgetAirConditioner)holder).mAuto.setOnCheckedChangeListener(listener);
-            ((ViewHolderWidgetAirConditioner)holder).mSeekbar.setProgress(widget.mIntValue);
+            ((ViewHolderWidgetAirConditioner)holder).mSeekbar.setProgress(widget.mIntTargetValue);
             ((ViewHolderWidgetAirConditioner)holder).mSeekbar.setOnSeekBarChangeListener(listener);
             ((ViewHolderWidgetAirConditioner)holder).mSeekbar.setEnabled(!widget.mBoolValue);
-            ((ViewHolderWidgetAirConditioner)holder).mTemperature.setText(String.valueOf(widget.mIntValue) + " C°");
+            ((ViewHolderWidgetAirConditioner)holder).mTemperature.setText(getCurrentTemperatureString(widget));
         }
     }
 
@@ -132,54 +147,10 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
 
-    public class ViewHolderWidgetLights extends RecyclerView.ViewHolder {
-        private RobotoLightTextView mTitle;
-        private SwitchCompat mSwicth;
-        private AppCompatSeekBar mSeekbar;
-
-        public ViewHolderWidgetLights(View itemView) {
-            super(itemView);
-
-            mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_lights_title);
-            mSwicth = (SwitchCompat) itemView.findViewById(R.id.list_item_widget_lights_switch);
-            mSeekbar = (AppCompatSeekBar) itemView.findViewById(R.id.list_item_widget_lights_bightness);
-        }
-    }
-
-    public class ViewHolderWidgetTemperature extends RecyclerView.ViewHolder {
-        private RobotoLightTextView mTitle;
-        private RobotoLightTextView mTemperature;
-
-        public ViewHolderWidgetTemperature(View itemView) {
-            super(itemView);
-
-            mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_temperature_title);
-            mTemperature = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_temperature);
-        }
-    }
-
-    public class ViewHolderWidgetAirConditioner extends RecyclerView.ViewHolder {
-        private RobotoLightTextView mTitle;
-        private RobotoLightTextView mTemperature;
-        private RobotoLightTextView mAirHumidity;
-
-        private CheckBox mAuto;
-        private AppCompatSeekBar mSeekbar;
-
-        public ViewHolderWidgetAirConditioner(View itemView) {
-            super(itemView);
-
-            mTitle = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_cond_title);
-            mTemperature = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_cond_temp_text);
-            mAirHumidity = (RobotoLightTextView) itemView.findViewById(R.id.list_item_widget_air_humidity_text);
-
-            mAuto = (CheckBox) itemView.findViewById(R.id.list_item_widget_air_cond_auto);
-            mSeekbar = (AppCompatSeekBar) itemView.findViewById(R.id.list_item_widget_air_cond_temp_bar);
-        }
-    }
 
     private class WidgetListener implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
         private RoomWidget mWidget;
+        private RobotoLightTextView mTargetTemperatureText;
 
         public WidgetListener(RoomWidget widget) {
             mWidget = widget;
@@ -190,13 +161,27 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if(mListener != null) {
                 mWidget.mBoolValue = isChecked;
                 mWidget.mStatus = RoomWidget.STATUS_UPDATES_PENDING;
-                mListener.onRoomWidgetChanged(mWidget);
+                mListener.onUserUpdatedWidgetState(mWidget);
             }
+        }
+
+        public void setTargetTemperatureText(RobotoLightTextView text) {
+            mTargetTemperatureText = text;
         }
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if(mWidget.mType == WIDGET_TYPE_TEMPERATURE) {
+                if(progress < Constants.MIN_TARGET_TEMPERATURE_CELSIUS) {
+                    seekBar.setProgress(Constants.MIN_TARGET_TEMPERATURE_CELSIUS);
+                } else if(progress > Constants.MAX_TARGET_TEMPERATURE_CELSIUS) {
+                    seekBar.setProgress(Constants.MAX_TARGET_TEMPERATURE_CELSIUS);
+                }
 
+                if(mTargetTemperatureText != null) {
+                    mTargetTemperatureText.setText(getTargetTemperatureString(progress));
+                }
+            }
         }
 
         @Override
@@ -205,9 +190,9 @@ public class RoomWidgetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             if(mListener != null) {
-                mWidget.mIntValue = seekBar.getProgress();
+                mWidget.mIntTargetValue = seekBar.getProgress();
                 mWidget.mStatus = RoomWidget.STATUS_UPDATES_PENDING;
-                mListener.onRoomWidgetChanged(mWidget);
+                mListener.onUserUpdatedWidgetState(mWidget);
             }
         }
     }

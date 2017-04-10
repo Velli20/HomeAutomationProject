@@ -1,12 +1,11 @@
 /* Includes */
 #include "DIALOG.h"
 #include "main.h"
-#include "BITMAPS.h"
 #include "SWIPELIST.h"
 #include "RoomConfiguration.h"
 #include "RoomWidgetConstants.h"
 #include "RoomWidget.h"
-#include "fonts.h"
+#include "UI_resources.h"
 
 /* Defines */
 #define ID_WINDOW_LIGHTS  				(GUI_ID_USER + 0x00)
@@ -16,56 +15,37 @@
 #define ID_IMAGE_VIEW_LIGHTS_SELECTION  (GUI_ID_USER + 0x04)
 #define ID_TEXT_LIGHTS_SELECTION  		(GUI_ID_USER + 0x05)
 
-/* Colors */
-#define LEMON       					0x00d6d3
-/* Height of the list item in pixels */
-#define LIGHTS_LIST_ITEM_HEIGHT 		56
-/* Title of the window */
-#define LIGHTS_WINDOW_TITLE				"Valaistus"
-/* List item text is that is displayed under header */
-#define LIGHTS_ITEM_TEXT_LIGHTS_ON		"Päällä"
-#define LIGHTS_ITEM_TEXT_LIGHTS_OFF		"Pois päältä"
-/* List item text if light widget name is null or empty */
-#define LIGHTS_NO_NAME					"NO NAME"
-
-/* Private typedef */
-typedef struct {
-	const GUI_BITMAP * pBitmap;
-	const char * pText;
-} BITMAP_ITEM;
 
 /* Private function prototypes */
 static void Lights_DialogCallback(WM_MESSAGE * pMsg);
 static void Lights_InitRoomList(const WM_HWIN hItem);
 static void Lights_UpdateRoomList(const WM_HWIN hItem);
 static void Lights_SetItemSelected(const int position);
-static void Lights_SetItemClicked(const int position);
+static void Lights_ToggleLight();
+static void Lights_OnWidgetStateChangedCallback(struct RoomWidget * widget, int notificationCode);
 
-/* Public function prototypes */
-WM_HWIN Lights_CreateLightsWindow(void);
-void Lights_OnWidgetStateChangedCallback(struct RoomWidget * widget);
 
-/* Static data */
+/* Private Variables */
 static WM_HWIN hThisWindow;
+static int selectedLightWidget = 0;
+static int selectedLightWidgetId;
 
-/* Set pointer to a font, used for an easier exchange of fonts */
-static GUI_CONST_STORAGE GUI_FONT * pFont23pBold = &GUI_Font23S_AA4;
-static GUI_CONST_STORAGE GUI_FONT * pFont32pBold = &GUI_Font32S_AA4;
-static GUI_CONST_STORAGE GUI_FONT * pFont23p     = &GUI_Font23SL_AA4;
-static GUI_CONST_STORAGE GUI_FONT * pFont32p     = &GUI_Font32SL_AA4;
-
-/* Variables */
-int selectedLightWidget = 0;
 
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-		{ WINDOW_CreateIndirect, "", ID_WINDOW_LIGHTS, 0, 0, 480, 272, 0, 0x0, 0 },
-		{ IMAGE_CreateIndirect, "", ID_IMAGE_VIEW_LIGHTS_RETURN, 10, 5, 48, 48, 0, 0, 0 },
+		{ WINDOW_CreateIndirect, NULL, ID_WINDOW_LIGHTS, 0, 0, 480, 272, 0, 0x0, 0 },
+		{ IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_LIGHTS_RETURN, 10, 5, 48, 48, 0, 0, 0 },
 		{ TEXT_CreateIndirect, LIGHTS_WINDOW_TITLE, ID_TEXT_LIGHTS_RETURN, 65, 19, 80, 20, 0, 0x0, 0 },
-		{ SWIPELIST_CreateIndirect, "", ID_LIGTHS_SWIPE_LIST, 0, 59, 240, 214, 0, 0x0, 0 },
-        { IMAGE_CreateIndirect, "", ID_IMAGE_VIEW_LIGHTS_SELECTION, 302, 78, 116, 116, 0, 0, 0 },
-        { TEXT_CreateIndirect, "", ID_TEXT_LIGHTS_SELECTION, 322, 176, 80, 20, 0, 0x0, 0 },};
+		{ SWIPELIST_CreateIndirect, NULL, ID_LIGTHS_SWIPE_LIST, 0, 59, 240, 214, 0, 0x0, 0 },
+        { IMAGE_CreateIndirect, NULL, ID_IMAGE_VIEW_LIGHTS_SELECTION, 302, 78, 116, 116, 0, 0, 0 },
+        { TEXT_CreateIndirect, NULL, ID_TEXT_LIGHTS_SELECTION, 322, 176, 80, 20, 0, 0x0, 0 },};
 
 /* Static code */
+
+/**
+ * @brief  Handle callback events from parent window
+ * @param  pMsg: callback message structure from parent window
+ * @retval None
+ */
 static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 	WM_HWIN hItem;
 	int NCode;
@@ -91,7 +71,7 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 		/* Initialization of title */
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_LIGHTS_RETURN);
 		TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, WINDOW_TITLE_FONT);
 
 		/* Initialization of swipe list that displays room names  */
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_LIGTHS_SWIPE_LIST);
@@ -103,7 +83,7 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 		/* Set color of the line that separates list items */
 		SWIPELIST_SetDefaultSepColor(GUI_WHITE);
 		/* Set list item header font. This dosen't affect on item text */
-		SWIPELIST_SetFont(hItem, SWIPELIST_FI_ITEM_HEADER, pFont23p);
+		SWIPELIST_SetFont(hItem, SWIPELIST_FI_ITEM_HEADER, LIGHTS_WINDOW_LIST_HEADER_FONT);
 		//SWIPELIST_SetFont(hItem, SWIPELIST_FI_ITEM_TEXT, pFont23p);
 
 		SWIPELIST_SetTextColor(hItem, SWIPELIST_CI_ITEM_HEADER_SEL, GUI_WHITE);
@@ -121,7 +101,7 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 		/* Initialization of selection icon title */
 		hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_LIGHTS_SELECTION);
 		TEXT_SetTextAlign(hItem, GUI_TA_HCENTER | GUI_TA_VCENTER);
-		TEXT_SetFont(hItem, GUI_FONT_13B_1);
+		TEXT_SetFont(hItem, LIGHTS_WINDOW_LIGTH_TOGGLE_FONT);
 
 		break;
 	case WM_DELETE:
@@ -138,7 +118,6 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 		NCode = pMsg->Data.v;
 		switch (Id) {
 
-		   /* Notifications sent by ID_IMAGE_VIEW_LIGHTS_RETURN */
 		case ID_IMAGE_VIEW_LIGHTS_RETURN:
 			switch (NCode) {
 			/* User pressed return icon */
@@ -149,7 +128,6 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 				break;
 			}
 			break;
-			/* Notifications sent by ID_ICONVIEW_LIGHTS */
 		case ID_LIGTHS_SWIPE_LIST:
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_LIGTHS_SWIPE_LIST);
 			switch (NCode) {
@@ -165,7 +143,7 @@ static void Lights_DialogCallback(WM_MESSAGE * pMsg) {
 			hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_VIEW_LIGHTS_SELECTION);
 			switch (NCode) {
 			case WM_NOTIFICATION_RELEASED:
-				Lights_SetItemClicked(selectedLightWidget);
+				Lights_ToggleLight();
 				break;
 			}
 			break;
@@ -261,58 +239,61 @@ static void Lights_UpdateRoomList(const WM_HWIN hItem) {
  * @brief  Change menu item bitmap
  * @param  position: Position of selected item in SwipeList widget
  */
-static void Lights_SetItemClicked(const int position) {
+static void Lights_ToggleLight() {
 	WM_HWIN hItemIcon = WM_GetDialogItem(hThisWindow, ID_IMAGE_VIEW_LIGHTS_SELECTION);
 	WM_HWIN hItemList = WM_GetDialogItem(hThisWindow, ID_LIGTHS_SWIPE_LIST);
 
-	int count = RoomConfiguration_GetLightWidgetCount();
 
-	if(position < 0 || position > count || !hItemIcon || !hItemList || count == 0) {
-		return;
-	}
+	struct RoomList * roomConf = RoomConfiguration_GetRoomConfiguration();
+    struct RoomWidget * lightWidget = RoomWidget_GetRoomWidgetWithId(roomConf, selectedLightWidgetId);
 
-	struct RoomWidget ** lights = RoomConfiguration_GetPointerArrayForWidgetType(WIDGET_TYPE_LIGHT);
-	struct RoomWidget * lightWidget = lights[position];
+    if(!hItemIcon || !hItemList || !lightWidget) {
+    	return;
+    }
 
-	if (lightWidget) {
-		/* Change widget state to opposite to its current state */
-		int newState = (lightWidget->boolValue == 0 ? 1 : 0);
+	/* Change widget state to opposite to its current state */
+	int newState = (lightWidget->boolValue == 0 ? 1 : 0);
 
-		lightWidget->boolValue = newState;
-		IMAGE_SetBitmap(hItemIcon, newState == 0? &bmBITMAP_lights_off : &bmBITMAP_lights_on);
-		/* Change list item text to match the state of the widget */
-		SWIPELIST_SetText(hItemList, position, 1, newState == 0? LIGHTS_ITEM_TEXT_LIGHTS_OFF : LIGHTS_ITEM_TEXT_LIGHTS_ON);
-		WM_InvalidateWindow(hItemList);
-
-	}
-
-	free(lights);
+	lightWidget->boolValue = newState;
+	IMAGE_SetBitmap(hItemIcon, newState == 0 ? &bmBITMAP_lights_off : &bmBITMAP_lights_on);
+	/* Change list item text to match the state of the widget */
+	SWIPELIST_SetText(hItemList, selectedLightWidget, 1, newState == 0 ? LIGHTS_ITEM_TEXT_LIGHTS_OFF : LIGHTS_ITEM_TEXT_LIGHTS_ON);
+	WM_InvalidateWindow(hItemList);
+	/* Notify callbacks */
+	RoomConfiguration_NotifyWidgetUpdated(lightWidget, RC_WIDGET_UPDATED_FROM_USER);
 
 }
 
 /**
  * @brief  Set current selected item
- * @param  hItem: Handle of ICONVIEW widget
+ * @param  position: Position of item in list
  */
 static void Lights_SetItemSelected(const int position) {
+	if(!hThisWindow) {
+		return;
+	}
 	WM_HWIN hItemIcon = WM_GetDialogItem(hThisWindow, ID_IMAGE_VIEW_LIGHTS_SELECTION);
 	WM_HWIN hItemText = WM_GetDialogItem(hThisWindow, ID_TEXT_LIGHTS_SELECTION);
 
+	/* Get count of lights widget */
 	int count = RoomConfiguration_GetLightWidgetCount();
-
-	if(position < 0 || position > count || !hItemIcon || count == 0 || !hItemText) {
-		return;
-	}
 	/* Get pointer array of RoomWidgets with a type of WIDGET_TYPE_LIGHT */
 	struct RoomWidget ** lights = RoomConfiguration_GetPointerArrayForWidgetType(WIDGET_TYPE_LIGHT);
-	if (lights) {
-		struct RoomWidget * lightWidget = lights[position];
 
-		if (lightWidget) {
-			IMAGE_SetBitmap(hItemIcon, lightWidget->boolValue == 0 ? &bmBITMAP_lights_off : &bmBITMAP_lights_on);
-			TEXT_SetText(hItemText, lightWidget->name);
-		}
+	if(position > count || count == 0 || !lights || !hItemIcon || !hItemText) {
+		return;
 	}
+
+	/* Get pointer to the light widget based on list position */
+	struct RoomWidget * lightWidget = lights[position];
+
+	if (lightWidget) {
+		IMAGE_SetBitmap(hItemIcon, lightWidget->boolValue == 0 ? &bmBITMAP_lights_off : &bmBITMAP_lights_on);
+		TEXT_SetText(hItemText, lightWidget->name);
+		/* Store selected RoomWidget id so we can access it later easily */
+		selectedLightWidgetId = lightWidget->id;
+	}
+
 
 	/* Free allocated memory */
 	free(lights);
@@ -323,10 +304,13 @@ static void Lights_SetItemSelected(const int position) {
  * 		   function. When RoomConfiguration status updates are received, this function is called.
  * @param  widget: Pointer to the RoomWidget that status is changed
  */
-void Lights_OnWidgetStateChangedCallback(struct RoomWidget * widget) {
+static void Lights_OnWidgetStateChangedCallback(struct RoomWidget * widget, int notificationCode) {
 	/* Client device has updated RoomWidget with a device type matching Light */
-	//Lights_SetItemSelected(selectedLightWidget);
-	Lights_UpdateRoomList(WM_GetDialogItem(hThisWindow, ID_LIGTHS_SWIPE_LIST));
+	if(notificationCode == RC_WIDGET_UPDATED_FROM_REMOTE
+			|| notificationCode == RC_WIDGET_UPDATED_FROM_DEVICE) {
+		Lights_SetItemSelected(selectedLightWidget);
+	    Lights_UpdateRoomList(WM_GetDialogItem(hThisWindow, ID_LIGTHS_SWIPE_LIST));
+	}
 
 }
 

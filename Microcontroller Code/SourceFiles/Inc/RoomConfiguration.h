@@ -10,14 +10,19 @@
 #include "RoomWidget.h"
 #include "RoomWidgetParser.h"
 #include "RoomWidgetWriter.h"
+#include "SerialCommandWriterReader.h"
 
 #include <stdio.h>
 
 /* Name of the configuration file to scan in SD card root path */
 #define CONFIGURATION_FILE_NAME "conf.XML"
 /* Result codes for RoomConfigurationUpdateRoomState() function */
-#define ROOM_UPDATE_RESULT_OK		1
-#define ROOM_UPDATE_RESULT_ERROR	0
+#define ROOM_UPDATE_RESULT_OK			1
+#define ROOM_UPDATE_RESULT_ERROR		0
+/* Notification codes */
+#define RC_WIDGET_UPDATED_FROM_USER		0 /* User has made changes from device UI */
+#define RC_WIDGET_UPDATED_FROM_REMOTE   1 /* Changes has oqqured from remote device */
+#define RC_WIDGET_UPDATED_FROM_DEVICE   2 /* Changes has oqqured from device internally i.g temperature reading changed */
 
 typedef enum {
 	ROOM_CONFIGURATION_RESULT_NO_SD,
@@ -39,11 +44,12 @@ typedef enum {
 	ROOM_CONFIGURATION_DELETED,		/* RoomConfiguration deleted */
 } ROOM_CONFIGURATION_EVENT;
 
+
 /* Callback used to notify client if RoomConfiguration is changed */
 typedef void (*OnRoomConfigurationChangedCallback)(ROOM_CONFIGURATION_EVENT event);
 
 /* Callback used to notify client if RoomWidget state is changed */
-typedef void (*OnWidgetStateChangedCallback)(struct RoomWidget * widget);
+typedef void (*OnWidgetStateChangedCallback)(struct RoomWidget * widget, int notificationCode);
 
 
 /* Public function prototypes */
@@ -56,10 +62,15 @@ int RoomConfiguration_GetWidgetCount(struct RoomList* list, const int widgetType
 int RoomConfiguration_GetThermostatWidgetCount(void);
 int RoomConfiguration_GetLightWidgetCount(void);
 
+struct RoomList * RoomConfiguration_GetRoomConfiguration();
+
 char * RoomConfiguration_GetRoomConfiguartionInXmlFormat(void);
 
 void RoomConfiguration_SetOnRoomConfigurationChangedCallback(OnRoomConfigurationChangedCallback c);
 void RoomConfiguration_SetOnWidgetStateChangedCallback(OnWidgetStateChangedCallback c);
+
+void RoomConfiguration_NotifyWidgetUpdated(struct RoomWidget * widget, int notificationCode);
+void RoomConfiguration_NotifyRemoteDeviceWidgetUpdated(struct RoomWidget * widget);
 
 #endif /* __ROOMCONFIGURATION_H */
 
