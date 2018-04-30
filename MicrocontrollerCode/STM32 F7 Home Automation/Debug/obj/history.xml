@@ -1,0 +1,260 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m7 -mthumb -g2 -Wall -O0 -mfpu=fpv5-sp-d16 -mfloat-abi=hard -c -DSTM32F746xx -DUSE_HAL_DRIVER -DUSE_STM32746G_DISCOVERY -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Middlewares\FatFs\src -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Utilities -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Middlewares\STemWin\Config\inc -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\BSP\STM32746G-Discovery\Inc -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Utilities\Fonts -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Inc -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Drivers\CMSIS\Include -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Middlewares\FatFs\src\drivers -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Components -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Inc -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Middlewares\STemWin\inc -I..\..\..\..\..\..\..\Documents\HomeAutomationProject\MicrocontrollerCode\SourceFiles\Drivers\CMSIS\Device\ST\STM32F7xx\Include">
+      <target file="Window_lights.o" lastModified="162c70b7608">
+         <source file="..\..\..\SourceFiles\Src\Window_lights.c" lastModified="162c6fa363d"/>
+      </target>
+      <target file="stm32f7xx_hal_tim.o" lastModified="162c6babba5">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_tim.c" lastModified="159509fd850"/>
+      </target>
+      <target file="real_time_clock.o" lastModified="162c70b7bb2">
+         <source file="..\..\..\SourceFiles\Src\real_time_clock.c" lastModified="160b307ad81"/>
+      </target>
+      <target file="BITMAP_lights_on.o" lastModified="162c6bab121">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_lights_on.c" lastModified="159e8bb41f6"/>
+      </target>
+      <target file="startup_stm32f746xx.o" lastModified="162c6bb34c1">
+         <source file="..\..\..\SourceFiles\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\gcc\startup_stm32f746xx.s" lastModified="155f4ae368c"/>
+      </target>
+      <target file="DTH11.o" lastModified="162c70b7c54">
+         <source file="..\..\..\SourceFiles\Src\DTH11.c" lastModified="160d45677b7"/>
+      </target>
+      <target file="GUIConf.o" lastModified="162c6bab43e">
+         <source file="..\..\..\SourceFiles\Middlewares\STemWin\Config\Src\GUIConf.c" lastModified="156fa696929"/>
+      </target>
+      <target file="stm32746g_discovery_ts.o" lastModified="162c6bac7ac">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery_ts.c" lastModified="15950a0bae0"/>
+      </target>
+      <target file="Window_menu.o" lastModified="162c70b7169">
+         <source file="..\..\..\SourceFiles\Src\Window_menu.c" lastModified="162c709c35c"/>
+      </target>
+      <target file="Window_settings_date.o" lastModified="162c70b7cfb">
+         <source file="..\..\..\SourceFiles\Src\Window_settings_date.c" lastModified="160b34d2f7a"/>
+      </target>
+      <target file="EventHandler.o" lastModified="162c70b79a8">
+         <source file="..\..\..\SourceFiles\Src\EventHandler.c" lastModified="162c6f00c14"/>
+      </target>
+      <target file="BITMAP_return.o" lastModified="162c6bb2b88">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_return.c" lastModified="15b30a8bb45"/>
+      </target>
+      <target file="RoomConfiguration.o" lastModified="162c70b7493">
+         <source file="..\..\..\SourceFiles\Src\RoomConfiguration.c" lastModified="162c700c978"/>
+      </target>
+      <target file="stm32f7xx_hal_sdram.o" lastModified="162c6bacadc">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_sdram.c" lastModified="159509fd080"/>
+      </target>
+      <target file="ft5336.o" lastModified="162c6bac65a">
+         <source file="..\..\..\SourceFiles\Components\ft5336\ft5336.c" lastModified="155277dd224"/>
+      </target>
+      <target file="stm32f7xx_it.o" lastModified="162c6bac205">
+         <source file="..\..\..\SourceFiles\Src\stm32f7xx_it.c" lastModified="160ba11774a"/>
+      </target>
+      <target file="ov9655.o" lastModified="162c6bac7f1">
+         <source file="..\..\..\SourceFiles\Components\ov9655\ov9655.c" lastModified="155277dd22d"/>
+      </target>
+      <target file="stm32f7xx_hal_cortex.o" lastModified="162c6bace79">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_cortex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="Window_temperature.o" lastModified="162c70b73d0">
+         <source file="..\..\..\SourceFiles\Src\Window_temperature.c" lastModified="162c6f903c7"/>
+      </target>
+      <target file="BITMAP_sd_card.o" lastModified="162c6bab7ef">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_sd_card.c" lastModified="159e8539d95"/>
+      </target>
+      <target file="RoomWidget.o" lastModified="162c70275be">
+         <source file="..\..\..\SourceFiles\Src\RoomWidget.c" lastModified="162c6fa5ed9"/>
+      </target>
+      <target file="SerialCommandWriterReader.o" lastModified="162c70b7216">
+         <source file="..\..\..\SourceFiles\Src\SerialCommandWriterReader.c" lastModified="162c701e7f9"/>
+      </target>
+      <target file="stm32f7xx_hal_sd.o" lastModified="162c6bac390">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_sd.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32f7xx_hal_flash_ex.o" lastModified="162c6baadd5">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_flash_ex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="Font23S_AA4.o" lastModified="162c6bab79f">
+         <source file="..\..\..\SourceFiles\Utilities\Fonts\Font23S_AA4.c" lastModified="15b30a8bb90"/>
+      </target>
+      <target file="GregorianCalendar.o" lastModified="162c70b7855">
+         <source file="..\..\..\SourceFiles\Src\GregorianCalendar.c" lastModified="160b34ea697"/>
+      </target>
+      <target file="Log.o" lastModified="162c70b72a6">
+         <source file="..\..\..\SourceFiles\Src\Log.c" lastModified="162c703f040"/>
+      </target>
+      <target file="Font32S_AA4.o" lastModified="162c6bb2ac5">
+         <source file="..\..\..\SourceFiles\Utilities\Fonts\Font32S_AA4.c" lastModified="15b30a8bb98"/>
+      </target>
+      <target file="SerialCommandParser.o" lastModified="162c6baca46">
+         <source file="..\..\..\SourceFiles\Src\SerialCommandParser.c" lastModified="160b350ff68"/>
+      </target>
+      <target file="system_stm32f7xx.o" lastModified="162c6bab55d">
+         <source file="..\..\..\SourceFiles\Drivers\CMSIS\Device\ST\STM32F7xx\Source\Templates\system_stm32f7xx.c" lastModified="159509f6af0"/>
+      </target>
+      <target file="unicode.o" lastModified="162c6baabf3">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\option\unicode.c" lastModified="159509fff60"/>
+      </target>
+      <target file="syscall.o" lastModified="162c6baceee">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\option\syscall.c" lastModified="159509fff60"/>
+      </target>
+      <target file="stm32f7xx_hal_tim_ex.o" lastModified="162c6bb2ea3">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_tim_ex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="ff.o" lastModified="162c6bb2ff4">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\ff.c" lastModified="15a641aad55"/>
+      </target>
+      <target file="BITMAP_lights_selected.o" lastModified="162c6bb3172">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_lights_selected.c" lastModified="159e84e8623"/>
+      </target>
+      <target file="stm32f7xx_hal_dma2d.o" lastModified="162c6bab3f8">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_dma2d.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32f7xx_hal_msp.o" lastModified="162c6bab2bd">
+         <source file="..\..\..\SourceFiles\Src\stm32f7xx_hal_msp.c" lastModified="160ba09bcd7"/>
+      </target>
+      <target file="stm32f7xx_hal_spi.o" lastModified="162c6baaf88">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_spi.c" lastModified="159509fd080"/>
+      </target>
+      <target file="stm32f7xx_hal_dma.o" lastModified="162c6bb34a8">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_dma.c" lastModified="159509fd080"/>
+      </target>
+      <target file="TemperatureDataLogger.o" lastModified="162c70b7e3a">
+         <source file="..\..\..\SourceFiles\Src\TemperatureDataLogger.c" lastModified="162c7051a3f"/>
+      </target>
+      <target file="Window_settings.o" lastModified="162c70b7b0c">
+         <source file="..\..\..\SourceFiles\Src\Window_settings.c" lastModified="160b346b0f6"/>
+      </target>
+      <target file="Window_room_configuration.o" lastModified="162c70b790e">
+         <source file="..\..\..\SourceFiles\Src\Window_room_configuration.c" lastModified="160d485506c"/>
+      </target>
+      <target file="stm32f7xx_hal_flash.o" lastModified="162c6babda8">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_flash.c" lastModified="159509fd080"/>
+      </target>
+      <target file="GUI_X.o" lastModified="162c6bb3641">
+         <source file="..\..\..\SourceFiles\Middlewares\STemWin\OS\GUI_X.c" lastModified="156fa696553"/>
+      </target>
+      <target file="stm32746g_discovery_sd.o" lastModified="162c6bb27a0">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery_sd.c" lastModified="15b14181554"/>
+      </target>
+      <target file="stm32f7xx_hal_rcc.o" lastModified="162c6bb29ac">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_rcc.c" lastModified="159509fd080"/>
+      </target>
+      <target file="RoomWidgetWriter.o" lastModified="162c70b7745">
+         <source file="..\..\..\SourceFiles\Src\RoomWidgetWriter.c" lastModified="162c6fa1b58"/>
+      </target>
+      <target file="stm32f7xx_hal_i2c_ex.o" lastModified="162c6bb2b3f">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_i2c_ex.c" lastModified="159509fd080"/>
+      </target>
+      <target file="stm32f7xx_hal_gpio.o" lastModified="162c6bb2a2f">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_gpio.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32746g_discovery_eeprom.o" lastModified="162c6bb3269">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery_eeprom.c" lastModified="15950a0bae0"/>
+      </target>
+      <target file="stm32746g_discovery_lcd.o" lastModified="162c6bab72c">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery_lcd.c" lastModified="15950a0bae0"/>
+      </target>
+      <target file="BITMAP_settings.o" lastModified="162c6baba6f">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_settings.c" lastModified="159e8311778"/>
+      </target>
+      <target file="BITMAP_settings_selected.o" lastModified="162c6bac179">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_settings_selected.c" lastModified="159e83b717d"/>
+      </target>
+      <target file="stm32f7xx_ll_fmc.o" lastModified="162c6bb2c82">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_fmc.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32f7xx_hal_uart.o" lastModified="162c6bac8bf">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_uart.c" lastModified="159509fd080"/>
+      </target>
+      <target file="Font23SL_AA4.o" lastModified="162c6bb32d5">
+         <source file="..\..\..\SourceFiles\Utilities\Fonts\Font23SL_AA4.c" lastModified="15b30a8bb8d"/>
+      </target>
+      <target file="BITMAP_console_selected.o" lastModified="162c6baacd4">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_console_selected.c" lastModified="159e84d3c62"/>
+      </target>
+      <target file="sd_diskio.o" lastModified="162c6bacc92">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\drivers\sd_diskio.c" lastModified="159f288ede1"/>
+      </target>
+      <target file="Font32SL_AA4.o" lastModified="162c6bb2664">
+         <source file="..\..\..\SourceFiles\Utilities\Fonts\Font32SL_AA4.c" lastModified="15b30a8bb94"/>
+      </target>
+      <target file="stm32f7xx_hal_pwr_ex.o" lastModified="162c6bb2de3">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_pwr_ex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="ezxml.o" lastModified="162c6bb2887">
+         <source file="..\..\..\SourceFiles\Src\ezxml.c" lastModified="15b55c23ee0"/>
+      </target>
+      <target file="stm32f7xx_ll_sdmmc.o" lastModified="162c6bab4e3">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_ll_sdmmc.c" lastModified="159509fd080"/>
+      </target>
+      <target file="Window_settings_time.o" lastModified="162c70b7a5d">
+         <source file="..\..\..\SourceFiles\Src\Window_settings_time.c" lastModified="160b3025caf"/>
+      </target>
+      <target file="BITMAP_console.o" lastModified="162c6bb2d5c">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_console.c" lastModified="15a68c966bd"/>
+      </target>
+      <target file="stm32f7xx_hal.o" lastModified="162c6bb290a">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal.c" lastModified="159509fd850"/>
+      </target>
+      <target file="ff_gen_drv.o" lastModified="162c6bb31ec">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\ff_gen_drv.c" lastModified="159509fff60"/>
+      </target>
+      <target file="BITMAP_temperature_selected.o" lastModified="162c6babf25">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_temperature_selected.c" lastModified="159e84e08af"/>
+      </target>
+      <target file="stm32f7xx_hal_ltdc.o" lastModified="162c6babfe3">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_ltdc.c" lastModified="159509fd080"/>
+      </target>
+      <target file="stm32746g_discovery.o" lastModified="162c6bac29a">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery.c" lastModified="15950a0bae0"/>
+      </target>
+      <target file="diskio.o" lastModified="162c70b76a5">
+         <source file="..\..\..\SourceFiles\Middlewares\FatFs\src\diskio.c" lastModified="16094ce7093"/>
+      </target>
+      <target file="wm8994.o" lastModified="162c6bab848">
+         <source file="..\..\..\SourceFiles\Components\wm8994\wm8994.c" lastModified="155277dd23e"/>
+      </target>
+      <target file="BITMAP_lights.o" lastModified="162c6bac55c">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_lights.c" lastModified="159e824b098"/>
+      </target>
+      <target file="BITMAP_lights_off.o" lastModified="162c6bacfcd">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_lights_off.c" lastModified="159e8bbf1ab"/>
+      </target>
+      <target file="LCDConf.o" lastModified="162c70b7548">
+         <source file="..\..\..\SourceFiles\Middlewares\STemWin\Config\Src\LCDConf.c" lastModified="156fa696929"/>
+      </target>
+      <target file="stm32f7xx_hal_rtc_ex.o" lastModified="162c6bac611">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_rtc_ex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32f7xx_hal_sram.o" lastModified="162c6baad48">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_sram.c" lastModified="159509fd080"/>
+      </target>
+      <target file="stm32746g_discovery_sdram.o" lastModified="162c6baab78">
+         <source file="..\..\..\SourceFiles\BSP\STM32746G-Discovery\Src\stm32746g_discovery_sdram.c" lastModified="15950a0bae0"/>
+      </target>
+      <target file="stm32f7xx_hal_i2c.o" lastModified="162c6bab236">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_i2c.c" lastModified="159509fd080"/>
+      </target>
+      <target file="RoomWidgetParser.o" lastModified="162c70b7da2">
+         <source file="..\..\..\SourceFiles\Src\RoomWidgetParser.c" lastModified="162c7025d21"/>
+      </target>
+      <target file="main.o" lastModified="162c70b7804">
+         <source file="..\..\..\SourceFiles\Src\main.c" lastModified="162c70b6138"/>
+      </target>
+      <target file="BITMAP_save.o" lastModified="162c6bb2be8">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_save.c" lastModified="15a7af15223"/>
+      </target>
+      <target file="stm32f7xx_hal_rcc_ex.o" lastModified="162c6bac964">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_rcc_ex.c" lastModified="159509fd850"/>
+      </target>
+      <target file="stm32f7xx_hal_pwr.o" lastModified="162c6bac9e8">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_pwr.c" lastModified="159509fd080"/>
+      </target>
+      <target file="stm32f7xx_hal_rtc.o" lastModified="162c6bab8eb">
+         <source file="..\..\..\SourceFiles\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_rtc.c" lastModified="159509fd080"/>
+      </target>
+      <target file="BITMAP_temperature.o" lastModified="162c6bacbbc">
+         <source file="..\..\..\SourceFiles\Icons\BITMAP_temperature.c" lastModified="159e83a87ad"/>
+      </target>
+   </processor>
+</history>

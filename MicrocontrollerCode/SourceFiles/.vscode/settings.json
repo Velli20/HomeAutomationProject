@@ -1,0 +1,31 @@
+{
+    "files.associations": {
+        "serialcommandwriterreader.h": "c",
+        "main.h": "c",
+        "stm32746g_discovery_eeprom.h": "c",
+        "stm32f7xx_hal.h": "c",
+        "temperaturedatalogger.h": "c",
+        "ff.h": "c",
+        "bsp.h": "c",
+        "dth11.h": "c",
+        "gui.h": "c",
+        "sd_diskio.h": "c",
+        "roomconfiguration.h": "c",
+        "string.h": "c",
+        "ff_gen_drv.h": "c",
+        "ui_resources.h": "c",
+        "roomwidget.h": "c",
+        "chrono": "c",
+        "sstream": "c",
+        "rope": "c",
+        "system_error": "cpp",
+        "array": "c",
+        "wm.h": "c",
+        "stm32f7xx_it.h": "c",
+        "functional": "c",
+        "log.h": "c",
+        "stm32746g_discovery_sdram.h": "c",
+        "stm32746g_discovery.h": "c",
+        "stm32746g_discovery_ts.h": "c"
+    }
+}

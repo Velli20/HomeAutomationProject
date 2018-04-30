@@ -82,6 +82,7 @@ public class FragmentRoomWidgets extends Fragment implements OnUserUpdatedWidget
         mRefreshLayout.setOnRefreshListener(this);
         ((ActivityMain)getActivity()).registerOnRoomWidgetDataReceivedListener(mRoomId, this);
         ((ActivityMain)getActivity()).registerOnBtServiceStateChangedListener(this);
+
     }
 
     @Override
