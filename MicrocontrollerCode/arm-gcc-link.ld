@@ -4,11 +4,13 @@ MEMORY
 {
 	rom (rx)  : ORIGIN = 0x08000000, LENGTH = 0x00100000
 	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00050000
+	ext (x)   : ORIGIN = 0x90000000, LENGTH = 0x10000000
 }
 
 _eram = 0x20000000 + 0x00050000;
 SECTIONS
 {
+    
 	.text :
 	{
 		KEEP(*(.isr_vector))
@@ -91,6 +93,11 @@ SECTIONS
 		_edata = __data_end__;
 	} > ram 
 	
+	.qspi :
+    {
+        *(.qspi*);
+    } > ext 
+    
 	.bss :
 	{
 		. = ALIGN(4);

@@ -77,7 +77,7 @@ defined in linker script */
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler:  
-  ldr   sp, =_estack      /* set stack pointer */
+  ldr   sp, =_eram      /* set stack pointer */
 
 /* Copy the data segment initializers from flash to SRAM */  
   movs  r1, #0
@@ -141,7 +141,7 @@ Infinite_Loop:
    
    
 g_pfnVectors:
-  .word  _estack
+  .word  _eram
   .word  Reset_Handler
 
   .word  NMI_Handler
@@ -587,5 +587,5 @@ g_pfnVectors:
    .weak      SPDIF_RX_IRQHandler            
    .thumb_set SPDIF_RX_IRQHandler,Default_Handler 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/		
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
  

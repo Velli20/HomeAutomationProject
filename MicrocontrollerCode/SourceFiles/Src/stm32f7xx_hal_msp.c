@@ -8,7 +8,7 @@ extern DMA_HandleTypeDef DmaRxHandle;
 
 // HAL_MspInit
 
-void HAL_MspInit(void) 
+void HAL_MspInit(void)
 {
     HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
 
@@ -35,10 +35,10 @@ void HAL_MspInit(void)
 
 // HAL_TIM_Base_MspInit
 
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) 
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
     // Enable peripherals and GPIO Clocks.
-	
+
 	__HAL_RCC_TIM3_CLK_ENABLE();
 	__HAL_RCC_TIM7_CLK_ENABLE();
 
@@ -70,7 +70,7 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim)
 
 // HAL_RTC_MspInit
 
-void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc) 
+void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
 {
 	RCC_OscInitTypeDef        RCC_OscInitStruct;
     RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
@@ -84,12 +84,12 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
     RCC_OscInitStruct.PLL.PLLState=   RCC_PLL_NONE;
     RCC_OscInitStruct.LSIState=       RCC_LSI_ON;
     RCC_OscInitStruct.LSEState=       RCC_LSE_OFF;
-  
+
 	HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
     PeriphClkInitStruct.PeriphClockSelection= RCC_PERIPHCLK_RTC;
     PeriphClkInitStruct.RTCClockSelection=    RCC_RTCCLKSOURCE_LSI;
-  
+
 	HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 
     __HAL_RCC_RTC_ENABLE();
@@ -97,19 +97,19 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef* hrtc)
 
 // HAL_RTC_MspDeInit
 
-void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc) 
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
 {
     __HAL_RCC_RTC_DISABLE();
 }
 
 // HAL_UART_MspInit
 
-void HAL_UART_MspInit(UART_HandleTypeDef* huart) 
+void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
-	
+
 	// Enable TX/RX GPIO clock.
-	
+
 	__GPIOC_CLK_ENABLE();
 
 	// Enable USART6 clock.
@@ -190,7 +190,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 
 // HAL_UART_MspDeInit
 
-void HAL_UART_MspDeInit(UART_HandleTypeDef* huart) 
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
 	// Reset peripherals.
 
@@ -204,14 +204,14 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 
 	// De-Initialize the DMA channel associated to reception process.
 
-	if ( huart && huart->hdmarx ) 
+	if ( huart && huart->hdmarx )
 		  HAL_DMA_DeInit(huart->hdmarx);
-	
+
     // De-Initialize the DMA channel associated to transmission process.
 
-	if ( huart && huart->hdmatx ) 
+	if ( huart && huart->hdmatx )
 	   	HAL_DMA_DeInit(huart->hdmatx);
-	
+
 	// Disable the NVIC for DMA.
 
 	HAL_NVIC_DisableIRQ(DMA2_Stream7_IRQn);
